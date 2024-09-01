@@ -28,7 +28,7 @@ public class JwtTokenProvider {
      * @param  String
      * @return String
      * --------------
-     * @author 강문호
+     * @author 강문호   
      * */
     private Key getSigningKey() {
     	 /**
