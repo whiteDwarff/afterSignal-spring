@@ -9,20 +9,23 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class signUpVO {
+public class SignUpVO {
 
 	private String email;
 	private String password;
 	private String nickname;
 	private String name;
 	private String tel;
+	private String salt;
+
 	
-	public signUpVO(String email, String password, String nickname, String name, String tel) {
+	public SignUpVO(String email, String password, String nickname, String name, String tel, String salt) {
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
 		this.name = name;
 		this.tel = tel;
+		this.salt = salt;
 	}
 	
 	
@@ -33,15 +36,18 @@ public class signUpVO {
 		private String nickname;
 		private String name;
 		private String tel;
+		private String salt;
+
 		
 		public Builder() {}
 		
-		public Builder(signUpVO signUpVO) {
+		public Builder(SignUpVO signUpVO) {
 			this.email = signUpVO.email;
 			this.password = signUpVO.password;
 			this.nickname = signUpVO.nickname;
 			this.name = signUpVO.name;
 			this.tel = signUpVO.tel;
+			this.salt = signUpVO.salt;
 		}
 		
 		public Builder email(String email) {
@@ -69,8 +75,13 @@ public class signUpVO {
 			return this;
 		}
 		
-		public signUpVO build() {
-			return new signUpVO(email, password, nickname, name, tel);
+		public Builder salt(String salt) {
+			this.salt = salt;
+			return this;
+		}
+		
+		public SignUpVO build() {
+			return new SignUpVO(email, password, nickname, name, tel, salt);
 		}
 	}
 	

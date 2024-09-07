@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import egovframework.user.service.impl.sericeUserMapper;
-import egovframework.user.service.impl.signUpVO;
+import egovframework.user.service.ServiceUser;
+import egovframework.user.service.impl.ServiceUserMapper;
+import egovframework.user.service.impl.SignUpVO;
 
 @RestController
 @RequestMapping("/api/user")
@@ -22,9 +23,11 @@ public class UserController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-	private final sericeUserMapper mapper;
+	private final ServiceUserMapper mapper;
+	private final ServiceUser service;
 	
-	public UserController(sericeUserMapper mapper) {
+	public UserController(ServiceUser service, ServiceUserMapper mapper) {
+		this.service = service;
 		this.mapper = mapper;
 	}
 	
@@ -39,18 +42,34 @@ public class UserController {
 	}
 	
 	
-	
+	/**
+	 * 회원가입 > 중복된 닉네임 체크
+	 * @param  SignUpVO
+	 * @return ResponseEntity
+	 * */
 	@PostMapping("/duplicatedEmailCheck")
-	public ResponseEntity<?> duplicateEmailCheck(@RequestBody signUpVO signUpVO) throws Exception {
+	public ResponseEntity<?> duplicateEmailCheck(@RequestBody SignUpVO vo) throws Exception {
 		
+		int result = mapper.duplicatedEmailCheck(vo);
 		
-		int result = mapper.duplicatedEmailCheck(signUpVO);
-		
-		LOGGER.info("@@@@ VO : " + signUpVO.toString());
 		LOGGER.info("@@@@ result : " + String.valueOf(result));
 
 	
 		return ResponseEntity.ok(result);
+	}
+	
+	/**
+	 * 회원가입
+	 * @param SignUpVO
+	 * @return ResponseEntity
+	 * */
+	@PostMapping("/signUpUser")
+	public ResponseEntity<?> signUpUser(@RequestBody SignUpVO vo) throws Exception {
+		
+
+		service.signUpUser(vo);
+	
+		return ResponseEntity.ok(200);
 	}
 	
 	
