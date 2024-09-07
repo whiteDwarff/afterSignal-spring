@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="egovframework.user.service.impl.sericeUserMapper">
+<mapper namespace="egovframework.user.service.impl.ServiceUserMapper">
   
-  <select id="duplicatedEmailCheck" parameterType="signUpVO" resultType="int">
+  <select id="duplicatedEmailCheck" parameterType="SignUpVO" resultType="int">
   	SELECT COUNT(*) FROM SERVICE_USER
   	WHERE EMAIL = #{email}
   </select>
   
+  <insert id="signUpUser" parameterType="SignUpVO">
+  	INSERT INTO SERVICE_USER (
+  		  NICKNAME
+  		, EMAIL
+  		, PASSWORD
+  		, SALT
+  		, NAME
+  		, TEL
+  		, GRADE
+  	) VALUES (
+  		  #{nickname}
+  		, #{email}
+  		, #{password}
+  		, #{salt}
+  		, #{name}
+  		, #{tel}
+  		, 'COM0000010'
+  	)
+  </insert>
   
 </mapper>

@@ -7,5 +7,5 @@ public interface ServiceUserMapper {
 	
 	int duplicatedEmailCheck(SignUpVO vo) throws Exception;
 	
-	void signUpUser(SignUpVO vo) throws Exception;
+	int signUpUser(SignUpVO vo) throws Exception;
 }

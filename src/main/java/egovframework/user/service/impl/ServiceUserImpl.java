@@ -4,11 +4,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import egovframework.payload.ApiException;
+import egovframework.payload.ExceptionEnum;
 import egovframework.user.service.ServiceUser;
 import egovframework.user.web.UserController;
 import egovframework.user.service.impl.SignUpVO;
@@ -27,21 +30,29 @@ public class ServiceUserImpl implements ServiceUser{
 		this.mapper = mapper;
 	}
 	
-	public void signUpUser(SignUpVO vo) throws Exception {
-		try {
-			byte[] salt = this.getSalt();
-			String securePassword = this.getSecurePassword(vo.getPassword(), salt);
-            String saltString = Base64.getEncoder().encodeToString(salt);
-            
-			vo.setSalt(saltString);
-			vo.setPassword(securePassword);
-			
-			LOGGER.info("@@@@@@@@@@@@ VO" + vo.toString());
-			
-			mapper.signUpUser(vo);
-		} catch(Exception e) {
-			e.printStackTrace();
+	@Override
+	public HashMap<String, Object> signUpUser(SignUpVO vo) throws Exception {
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+//		try {
+		byte[] salt = this.getSalt();
+		String securePassword = this.getSecurePassword(vo.getPassword(), salt);
+        String saltString = Base64.getEncoder().encodeToString(salt);
+        
+		vo.setSalt(saltString);
+		vo.setPassword(securePassword);
+		
+		LOGGER.info("@@@@@@@@@@@@ VO" + vo.toString());
+		
+		int result = mapper.signUpUser(vo);
+		if(result == 0) {
+			throw new ApiException(ExceptionEnum.USER_001);
 		}
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+		return resultMap;	
 	}
 	
 	// 로그인 

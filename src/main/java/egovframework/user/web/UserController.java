@@ -7,12 +7,14 @@ import javax.annotation.Resource;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.payload.ApiResponse;
 import egovframework.user.service.ServiceUser;
 import egovframework.user.service.impl.ServiceUserMapper;
 import egovframework.user.service.impl.SignUpVO;
@@ -34,12 +36,6 @@ public class UserController {
 	
 	@Resource(name="propertyService")
 	protected EgovPropertyService propertyService;
-	
-	@PostMapping("/signUp")
-	public ResponseEntity<?> join(@RequestBody HashMap<String, Object> param) throws Exception {
-		
-		return ResponseEntity.ok(200);
-	}
 	
 	
 	/**
@@ -65,11 +61,12 @@ public class UserController {
 	 * */
 	@PostMapping("/signUpUser")
 	public ResponseEntity<?> signUpUser(@RequestBody SignUpVO vo) throws Exception {
-		
+		ApiResponse response =new ApiResponse(200, true, "success");
 
-		service.signUpUser(vo);
-	
-		return ResponseEntity.ok(200);
+		response.setResult(service.signUpUser(vo));
+//		service.signUpUser(vo);
+//		return ResponseEntity.ok(200);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	

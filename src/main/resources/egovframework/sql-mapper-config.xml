@@ -13,7 +13,7 @@
     	<typeAlias alias="egovMap" type="org.egovframe.rte.psl.dataaccess.util.EgovMap"/>
     	
     	<!-- 회원가입 -->
-    	<typeAlias alias="signUpVO" type="egovframework.user.service.impl.signUpVO"/>
+    	<typeAlias alias="SignUpVO" type="egovframework.user.service.impl.SignUpVO"/>
     	
     </typeAliases>
     

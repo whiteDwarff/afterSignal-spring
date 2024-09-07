@@ -13,16 +13,11 @@ import lombok.Getter;
 public enum ExceptionEnum {
 	/*
 	 *
-	 	통합교육지원시스템 : C
-		웹정보시스템 : W
-		포탈 : P
-		홈페이지 : H
-		학습관리 시스템(LMS) : L
-		문샷 : M
-		평가시스템 : T
-		ex) 시스템구분_대메뉴_001~~
+	 	관리자: ADMIN
+	 	사회자: 
+	 	사용자: USER
 	*/
-	USER_001(HttpStatus.BAD_REQUEST , "USER_001", "삭제 실패하였습니다."),
+	USER_001(HttpStatus.BAD_REQUEST , "USER_001", "회원가입에 실패하였습니다."),
 
     JOIN_001(HttpStatus.BAD_REQUEST , "JOIN_001", "학적정보조회 기능 점검중입니다."),
 
