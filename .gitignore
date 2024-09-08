@@ -14,3 +14,6 @@ local.properties
 
 # ignore properties file
 globals.properties
+/target/
+/.factorypath
+/.pmd
