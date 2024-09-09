@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import egovframework.cmmn.code.service.impl.ComnCodeMapper;
 import egovframework.payload.ApiException;
 import egovframework.payload.ExceptionEnum;
 import egovframework.user.service.ServiceUser;
@@ -24,12 +25,41 @@ public class ServiceUserImpl implements ServiceUser{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceUserImpl.class);
 
-	private final ServiceUserMapper mapper;
+	private final ServiceUserMapper mapper;  // 사용자
+	private final ComnCodeMapper codeMapper; // 공통코드
 	
-	public ServiceUserImpl(ServiceUserMapper mapper) {
+	
+	public ServiceUserImpl(ServiceUserMapper mapper, ComnCodeMapper codeMapper) {
 		this.mapper = mapper;
+		this.codeMapper = codeMapper;
 	}
 	
+	/**
+	 * 이메일, 닉네임 중복여부 조회
+	 * @param  SignUpVO
+	 * @return HashMap
+	 * */
+	public HashMap<String, Object> duplicatedInfoCheck(HashMap<String, Object> map) throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		int count;
+		String flg = (String) map.get("flg");
+		
+		if(flg.equalsIgnoreCase("email"))
+			count = this.mapper.duplicatedEmailCheck(map);
+		else 
+			count = this.mapper.duplicatedNicknameCheck(map);
+		
+		resultMap.put("count", count);
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 서비스 사용자 회원가입
+	 * @param  SignUpVO
+	 * @return HashMap
+	 * */
 	@Override
 	public HashMap<String, Object> signUpUser(SignUpVO vo) throws Exception {
 		
@@ -53,6 +83,23 @@ public class ServiceUserImpl implements ServiceUser{
 //			e.printStackTrace();
 //		}
 		return resultMap;	
+	}
+	
+	
+	/**
+	 * 공통코드 조회
+	 * @return HashMap
+	 * */
+	@Override
+	public HashMap<String, Object> getCommCode() throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		resultMap.put("city", codeMapper.selectLowerCommCdByKR("2"));
+		resultMap.put("COM0000006", codeMapper.selectLowerCommCdByKR("3"));
+		resultMap.put("COM0000008", codeMapper.selectLowerCommCdByKR("4"));
+		resultMap.put("COM0000007", codeMapper.selectLowerCommCdByKR("5"));
+		
+		return resultMap;
 	}
 	
 	// 로그인 
@@ -93,5 +140,6 @@ public class ServiceUserImpl implements ServiceUser{
         random.nextBytes(salt);
         return salt;
     }
+
 
 }

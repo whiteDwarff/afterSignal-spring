@@ -2,9 +2,16 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="egovframework.user.service.impl.ServiceUserMapper">
   
-  <select id="duplicatedEmailCheck" parameterType="SignUpVO" resultType="int">
+  <select id="duplicatedEmailCheck" parameterType="hashMap" resultType="int">
+  	/* 서비스 사용자 이메일 중복검사, serviceUser_SQL.duplicatedEmailCheck */
   	SELECT COUNT(*) FROM SERVICE_USER
   	WHERE EMAIL = #{email}
+  </select>
+  
+   <select id="duplicatedNicknameCheck" parameterType="hashMap" resultType="int">
+  	/* 서비스 사용자 닉네임 중복검사, serviceUser_SQL.duplicatedNicknameCheck */
+  	SELECT COUNT(*) FROM SERVICE_USER
+  	WHERE NICKNAME = #{nickname}
   </select>
   
   <insert id="signUpUser" parameterType="SignUpVO">
