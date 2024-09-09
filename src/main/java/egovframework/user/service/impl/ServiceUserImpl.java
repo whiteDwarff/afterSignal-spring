@@ -73,12 +73,12 @@ public class ServiceUserImpl implements ServiceUser{
 		vo.setSalt(saltString);
 		vo.setPassword(securePassword);
 		
-		LOGGER.info("@@@@@@@@@@@@ VO" + vo.toString());
 		
 		int result = mapper.signUpUser(vo);
 		if(result == 0) {
 			throw new ApiException(ExceptionEnum.USER_001);
 		}
+		LOGGER.info("@@@@@@@@@@@@ VO" + vo.toString());
 //		} catch(Exception e) {
 //			e.printStackTrace();
 //		}

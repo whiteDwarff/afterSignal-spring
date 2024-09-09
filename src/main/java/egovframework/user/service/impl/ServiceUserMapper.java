@@ -21,5 +21,10 @@ public interface ServiceUserMapper {
 	 * */
 	int duplicatedNicknameCheck(HashMap<String, Object> map) throws Exception;
 	
+	/**
+	 * 서비스 사용자 회원가입
+	 * @param  SignUpVO
+	 * @return int
+	 * */
 	int signUpUser(SignUpVO vo) throws Exception;
 }

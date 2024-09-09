@@ -15,22 +15,36 @@
   </select>
   
   <insert id="signUpUser" parameterType="SignUpVO">
+    <selectKey resultType="long" keyProperty="seq" order="BEFORE">
+    	SELECT COALESCE(MAX(SEQ), 0)+1 FROM SERVICE_USER
+    </selectKey>
+    /* 서비스 사용자 회원가입, serviceUser_SQL.signUpUser */
   	INSERT INTO SERVICE_USER (
-  		  NICKNAME
+  		  SEQ
+  		, NICKNAME
   		, EMAIL
   		, PASSWORD
   		, SALT
   		, NAME
   		, TEL
+  		, GENDER
+  		, CITY
   		, GRADE
+  		, PWD_UPD_DT
+  		, JOIN_DT
   	) VALUES (
-  		  #{nickname}
+  	      #{seq}
+  		, #{nickname}
   		, #{email}
   		, #{password}
   		, #{salt}
   		, #{name}
   		, #{tel}
+  		, #{gender}
+  		, #{city}
   		, 'COM0000010'
+  		, CURRENT_TIMESTAMP
+  		, CURRENT_TIMESTAMP
   	)
   </insert>
   
