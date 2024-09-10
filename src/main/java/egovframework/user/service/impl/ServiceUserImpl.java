@@ -10,11 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import egovframework.cmmn.code.service.impl.ComnCodeMapper;
+import egovframework.cmmm.code.service.impl.CommCodeMapper;
 import egovframework.payload.ApiException;
 import egovframework.payload.ExceptionEnum;
 import egovframework.user.service.ServiceUser;
-import egovframework.user.web.UserController;
 import egovframework.user.service.impl.SignUpVO;
 
 
@@ -26,10 +25,10 @@ public class ServiceUserImpl implements ServiceUser{
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceUserImpl.class);
 
 	private final ServiceUserMapper mapper;  // 사용자
-	private final ComnCodeMapper codeMapper; // 공통코드
+	private final CommCodeMapper codeMapper; // 공통코드
 	
 	
-	public ServiceUserImpl(ServiceUserMapper mapper, ComnCodeMapper codeMapper) {
+	public ServiceUserImpl(ServiceUserMapper mapper, CommCodeMapper codeMapper) {
 		this.mapper = mapper;
 		this.codeMapper = codeMapper;
 	}
@@ -94,10 +93,10 @@ public class ServiceUserImpl implements ServiceUser{
 	public HashMap<String, Object> getCommCode() throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		
-		resultMap.put("city", codeMapper.selectLowerCommCdByKR("2"));
-		resultMap.put("COM0000006", codeMapper.selectLowerCommCdByKR("3"));
-		resultMap.put("COM0000008", codeMapper.selectLowerCommCdByKR("4"));
-		resultMap.put("COM0000007", codeMapper.selectLowerCommCdByKR("5"));
+		resultMap.put("city", codeMapper.selectAllKrnmById("2"));
+		resultMap.put("COM0000006", codeMapper.selectAllKrnmById("3"));
+		resultMap.put("COM0000008", codeMapper.selectAllKrnmById("4"));
+		resultMap.put("COM0000007", codeMapper.selectAllKrnmById("5"));
 		
 		return resultMap;
 	}

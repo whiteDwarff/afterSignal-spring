@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import egovframework.cmmn.code.service.impl.ComCodeMapper;
+import egovframework.cmmm.code.service.impl.CommCodeMapper;
 import egovframework.config.security.impl.AuthUser;
 
 
@@ -41,27 +41,5 @@ public class EgovSampleController {
 	@Resource(name="propertyService")
 	protected EgovPropertyService propertyService;
 	
-	private final ComCodeMapper codeMapper;
-	
-	public EgovSampleController(ComCodeMapper codeMapper) {
-		this.codeMapper = codeMapper;
-	}
 
-	@GetMapping("/test")
-	public ResponseEntity<?> test() throws Exception {
-		
-		AuthUser user = new AuthUser.Builder()
-							.email("adad")
-							.password("adad")
-							.build();
-		
-		LOGGER.debug("@@@ MAP : " + user.toString());
-							
-		List<EgovMap> codeList = codeMapper.selectAll();
-		for(EgovMap map : codeList) {
-			LOGGER.debug("@@@ MAP : " + map.toString());
-		}
-		
-		return ResponseEntity.ok(user);
-	}
 }

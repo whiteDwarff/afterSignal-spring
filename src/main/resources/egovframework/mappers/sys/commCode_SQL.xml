@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="egovframework.cmmm.code.service.impl.CommCodeMapper">
+  
+  <select id="selectAllKrnmById" parameterType="string" resultType="egovMap">
+    /* 입력받은 아이디를 통해 하위목록 코드명 조회 (국문), CommCodeMapper_SQL.selectAllKrnmById */
+ 	SELECT 
+		  COMM_CD   AS VALUE
+		, COMM_KRNM AS LABEL
+	FROM COMM_CODE 
+	WHERE UPPR_COMM_CD  = (
+		SELECT COMM_CD 
+		FROM COMM_CODE 
+		WHERE COMM_CD_ID = #{id}
+	)
+  </select>
+  
+  
+</mapper>

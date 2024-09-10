@@ -5,7 +5,6 @@ import java.util.HashMap;
 import javax.annotation.Resource;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
-import org.egovframe.rte.psl.dataaccess.util.EgovMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import egovframework.cmmn.code.service.CommCodeService;
 import egovframework.payload.ApiResponse;
 import egovframework.user.service.ServiceUser;
 import egovframework.user.service.impl.SignUpVO;
@@ -27,11 +25,9 @@ public class UserController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	private final ServiceUser service;
-	private final CommCodeService codeService;	// 공통코드 서비스
 	
-	public UserController(ServiceUser service, CommCodeService codeService) {
+	public UserController(ServiceUser service) {
 		this.service = service;
-		this.codeService = codeService;
 	}
 	
 	
