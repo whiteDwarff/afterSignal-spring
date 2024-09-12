@@ -27,4 +27,11 @@ public interface ServiceUserMapper {
 	 * @return int
 	 * */
 	int signUpUser(SignUpVO vo) throws Exception;
+	
+	/**
+	 * 서비스 사용자 로그인정보 조회
+	 * @param  UserVO
+	 * @return UserVO
+	 * */
+	UserVO selectUserInfo(UserVO vo) throws Exception;
 }

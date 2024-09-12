@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,6 @@ public class ServiceUserImpl implements ServiceUser{
 		if(result == 0) {
 			throw new ApiException(ExceptionEnum.USER_001);
 		}
-		LOGGER.info("@@@@@@@@@@@@ VO" + vo.toString());
 //		} catch(Exception e) {
 //			e.printStackTrace();
 //		}
@@ -97,6 +97,36 @@ public class ServiceUserImpl implements ServiceUser{
 		resultMap.put("COM0000006", codeMapper.selectAllKrnmById("3"));
 		resultMap.put("COM0000008", codeMapper.selectAllKrnmById("4"));
 		resultMap.put("COM0000007", codeMapper.selectAllKrnmById("5"));
+		
+		return resultMap;
+	}
+	
+	/*
+	 * 서비스 사용자 로그인
+	 * @param  UserVO
+	 * @return HashMap
+	 * */
+	public HashMap<String, Object> signInUser(UserVO vo) throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		UserVO user = this.mapper.selectUserInfo(vo);
+		LOGGER.info("@@@@@@@@@@ USER : " + user.toString());
+
+		// 가입한 이메일이 없음
+		if(Objects.isNull(user)) {
+			throw new ApiException(ExceptionEnum.LOGIN_001);
+		}
+		
+		byte[] salt = Base64.getDecoder().decode(user.getSalt());
+		String securePassword = getSecurePassword(vo.getPassword(), salt);
+		// 비밀번호 불일치
+		if(!securePassword.equals(user.getPassword())) {
+			throw new ApiException(ExceptionEnum.LOGIN_002);
+		} else {
+			user.setPassword(null);
+			user.setSalt(null);
+			resultMap.put("user", user);
+		}
 		
 		return resultMap;
 	}

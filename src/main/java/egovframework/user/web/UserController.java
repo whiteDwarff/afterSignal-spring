@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.payload.ApiResponse;
 import egovframework.user.service.ServiceUser;
 import egovframework.user.service.impl.SignUpVO;
+import egovframework.user.service.impl.UserVO;
 
 @RestController
 @RequestMapping("/api/user")
@@ -61,17 +62,28 @@ public class UserController {
 	}
 	
 	/**
-	 * 회원가입
+	 * 서비스 사용자 회원가입
 	 * @param SignUpVO
 	 * @return ResponseEntity
 	 * */
 	@PostMapping("/signUpUser")
 	public ResponseEntity<?> signUpUser(@RequestBody SignUpVO vo) throws Exception {
-		ApiResponse response =new ApiResponse(200, true, "success");
+		ApiResponse response = new ApiResponse(200, true, "success");
 
 		response.setResult(service.signUpUser(vo));
-//		service.signUpUser(vo);
-//		return ResponseEntity.ok(200);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	/**
+	 * 서비스 사용자 로그인
+	 * @param UserVO
+	 * @return ResponseEntity
+	 * */
+	@PostMapping("/signInUser")
+	public ResponseEntity<?> signInUser(@RequestBody UserVO vo) throws Exception {
+		ApiResponse response = new ApiResponse(200, true, "success");
+
+		response.setResult(service.signInUser(vo));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

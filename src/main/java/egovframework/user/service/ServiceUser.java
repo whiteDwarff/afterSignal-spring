@@ -3,6 +3,7 @@ package egovframework.user.service;
 import java.util.HashMap;
 
 import egovframework.user.service.impl.SignUpVO;
+import egovframework.user.service.impl.UserVO;
 
 public interface ServiceUser {
 	
@@ -25,6 +26,13 @@ public interface ServiceUser {
 	 * @return HashMap
 	 * */
 	HashMap<String, Object> getCommCode() throws Exception;
+	
+	/*
+	 * 서비스 사용자 로그인
+	 * @param  UserVO
+	 * @return HashMap
+	 * */
+	HashMap<String, Object> signInUser(UserVO vo) throws Exception;
 
 
 }

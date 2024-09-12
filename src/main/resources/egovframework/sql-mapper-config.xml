@@ -7,6 +7,8 @@
 		<setting name="callSettersOnNulls" value="true"/>
 		<setting name="cacheEnabled" value="false" />
         <setting name="jdbcTypeForNull" value="NULL" />
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        
 	</settings>
 	
     <typeAliases>
@@ -14,6 +16,7 @@
     	
     	<!-- 회원가입 -->
     	<typeAlias alias="SignUpVO" type="egovframework.user.service.impl.SignUpVO"/>
+    	<typeAlias alias="UserVO" type="egovframework.user.service.impl.UserVO"/>
     	
     	
     </typeAliases>

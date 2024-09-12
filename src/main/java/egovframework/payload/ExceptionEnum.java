@@ -21,8 +21,8 @@ public enum ExceptionEnum {
 
     JOIN_001(HttpStatus.BAD_REQUEST , "JOIN_001", "학적정보조회 기능 점검중입니다."),
 
-    LOGIN_001(HttpStatus.BAD_REQUEST , "LOGIN_001", "계정 정보가 없습니다."),
-    LOGIN_002(HttpStatus.BAD_REQUEST , "LOGIN_002", "웨일스페이스 사용자 정보를 가져올 수 없습니다."),
+    LOGIN_001(HttpStatus.BAD_REQUEST , "LOGIN_001", "등록된 계정 정보가 없습니다."),
+    LOGIN_002(HttpStatus.BAD_REQUEST , "LOGIN_002", "비밀번호가 일치하지 않습니다."),
     LOGIN_003(HttpStatus.BAD_REQUEST , "LOGIN_003", "잘못된 접근입니다."),
     LOGIN_004(HttpStatus.BAD_REQUEST , "LOGIN_004", "웨일스페이스 로그인 실패"),
     LOGIN_005(HttpStatus.BAD_REQUEST , "LOGIN_005", "동일 아이디로 접속하여 로그아웃 됩니다."),
