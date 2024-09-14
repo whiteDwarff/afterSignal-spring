@@ -1,6 +1,9 @@
 package egovframework.user.service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
+
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.user.service.impl.SignUpVO;
 import egovframework.user.service.impl.UserVO;
@@ -27,12 +30,19 @@ public interface ServiceUser {
 	 * */
 	HashMap<String, Object> getCommCode() throws Exception;
 	
-	/*
+	/**
 	 * 서비스 사용자 로그인
 	 * @param  UserVO
 	 * @return HashMap
 	 * */
-	HashMap<String, Object> signInUser(UserVO vo) throws Exception;
-
+	HashMap<String, Object> signInUser(HashMap<String, Object> map) throws Exception;
+	
+	/**
+	 * 서비스 샤용자 개인정보 변경 
+	 * @param HashMap, MultipartHttpServletRequest
+	 * @return HashMap
+	 * @throws SQLException 
+	 * */
+	HashMap<String, Object> updateInfo(HashMap<String, Object> map, MultipartHttpServletRequest request) throws Exception ;
 
 }

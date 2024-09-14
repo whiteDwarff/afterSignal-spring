@@ -8,6 +8,9 @@
                 <entry key="PAGELIST_VIEW_20" value="20" />
                 <entry key="PAGELIST_VIEW_10" value="10" />
                 <entry key="PAGELIST_VIEW_8"  value="8"  />
+                
+                <!-- 서비스 사용자 파일 저장 경로 -->
+                <entry key="SERVICE_USER_FILE_PATH" value="/Users/whiteDwarff/upload/serviceUser" />
 	        </map>
 		</property>
 	</bean>

@@ -18,6 +18,8 @@ public enum ExceptionEnum {
 	 	사용자: USER
 	*/
 	USER_001(HttpStatus.BAD_REQUEST , "USER_001", "회원가입에 실패하였습니다."),
+	USER_002(HttpStatus.BAD_REQUEST , "USER_002", "회원정보 수정에 실패하였습니다."),
+
 
     JOIN_001(HttpStatus.BAD_REQUEST , "JOIN_001", "학적정보조회 기능 점검중입니다."),
 

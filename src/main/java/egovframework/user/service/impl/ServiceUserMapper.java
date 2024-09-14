@@ -30,8 +30,15 @@ public interface ServiceUserMapper {
 	
 	/**
 	 * 서비스 사용자 로그인정보 조회
-	 * @param  UserVO
+	 * @param  HashMap
 	 * @return UserVO
 	 * */
-	UserVO selectUserInfo(UserVO vo) throws Exception;
+	UserVO selectUserInfo(HashMap<String, Object> map) throws Exception;
+	
+	/**
+	 * 서비스 사용자 프로필 수정
+	 * @param  HashMap
+	 * @return int
+	 * */
+	int updateUserInfo(HashMap<String, Object> map) throws Exception;
 }

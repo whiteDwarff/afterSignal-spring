@@ -1,7 +1,5 @@
 package egovframework.user.service.impl;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,9 +26,9 @@ public class UserVO {
 	private int amount;
 	private String delYn;
 	private String profileImage;
-	private Date pwdUpdDt;
-	private Date loginDt;
-	private Date joinDt;
+	private String pwdUpdDt;
+	private String loginDt;
+	private String joinDt;
 	
 	public UserVO(
 			Long seq, 
@@ -48,9 +46,9 @@ public class UserVO {
 			int amount,
 			String delYn,
 			String profileImage,
-			Date pwdUpdDt,
-			Date loginDt,
-			Date joinDt
+			String pwdUpdDt,
+			String loginDt,
+			String joinDt
 			) {
 		
 		this.seq = seq;
@@ -90,9 +88,9 @@ public class UserVO {
 		private int amount;
 		private String delYn;
 		private String profileImage;
-		private Date pwdUpdDt;
-		private Date loginDt;
-		private Date joinDt;
+		private String pwdUpdDt;
+		private String loginDt;
+		private String joinDt;
 		
 		public Builder() {}
 		
@@ -192,17 +190,17 @@ public class UserVO {
 			return this;
 		}
 		
-		public Builder pwdUpdDt(Date pwdUpdDt) {
+		public Builder pwdUpdDt(String pwdUpdDt) {
 			this.pwdUpdDt = pwdUpdDt;
 			return this;
 		}
 		
-		public Builder loginDt(Date loginDt) {
+		public Builder loginDt(String loginDt) {
 			this.loginDt = loginDt;
 			return this;
 		}
 		
-		public Builder joinDt(Date joinDt) {
+		public Builder joinDt(String joinDt) {
 			this.joinDt = joinDt;
 			return this;
 		}

@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.payload.ApiResponse;
 import egovframework.user.service.ServiceUser;
@@ -30,7 +32,6 @@ public class UserController {
 	public UserController(ServiceUser service) {
 		this.service = service;
 	}
-	
 	
 	@Resource(name="propertyService")
 	protected EgovPropertyService propertyService;
@@ -80,16 +81,16 @@ public class UserController {
 	 * @return ResponseEntity
 	 * */
 	@PostMapping("/signInUser")
-	public ResponseEntity<?> signInUser(@RequestBody UserVO vo) throws Exception {
+	public ResponseEntity<?> signInUser(@RequestBody HashMap<String, Object> map) throws Exception {
 		ApiResponse response = new ApiResponse(200, true, "success");
 
-		HashMap<String, Object> resultMap = service.signInUser(vo);
+		HashMap<String, Object> resultMap = service.signInUser(map);
 		
 		if(resultMap.containsKey("msg")) {
 			response.setStatus(201);
-			response.setMessage((String) resultMap.get("msg"));
+			response.setMessage(resultMap.get("msg").toString());
 		}
-		response.setResult(service.signInUser(vo));
+		response.setResult(resultMap);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
@@ -98,11 +99,18 @@ public class UserController {
 	 * @param HashMap
 	 * @return ResponseEntity
 	 * */
-	@PostMapping("/updateInfo")
-	public ResponseEntity<?> updateInfo(@RequestBody HashMap<String, Object> map) throws Exception {
+	@PostMapping(value = "/updateInfo", consumes = {"multipart/form-data"})
+	public ResponseEntity<?> updateInfo(@RequestParam HashMap<String, Object> map, MultipartHttpServletRequest request) throws Exception {
 		ApiResponse response = new ApiResponse(200, true, "success");
-		LOGGER.info("@@@@@@@@@@@@@@@@ : " + map.toString());
-		//response.setResult(service.signInUser(vo));
+		
+		HashMap<String, Object> resultMap = service.updateInfo(map, request);
+		
+		if(resultMap.containsKey("msg")) {
+			response.setStatus(202);
+			response.setMessage(resultMap.get("msg").toString());
+		}
+		response.setResult(resultMap);
+		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

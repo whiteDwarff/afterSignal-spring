@@ -48,10 +48,43 @@
   	)
   </insert>
   
-  <select id="selectUserInfo" parameterType="UserVO" resultType="UserVO">
+  <select id="selectUserInfo" parameterType="hashMap" resultType="UserVO">
   	  /* 서비스 사용자 로그인정보 조회, serviceUser_SQL.selectUserInfo */
-  	  SELECT * FROM SERVICE_USER
-  	  WHERE EMAIL = #{email}
+  	   	SELECT 
+			  SEQ
+			, NICKNAME
+			, EMAIL
+			, NAME
+			, PASSWORD 
+			, SALT
+			, GENDER 
+			, TEL
+			, CITY
+			, DISTRICT
+			, GRADE
+			, DEPOSIT 
+			, AMOUNT
+			, DEL_YN
+			, PROFILE_IMAGE 
+			, TO_CHAR(PWD_UPD_DT, 'YYYY-MM-DD HH24:MI:SS') AS PWD_UPD_DT
+			, TO_CHAR(LOGIN_DT, 'YYYY-MM-DD HH24:MI:SS')   AS LOGIN_DT
+			, TO_CHAR(JOIN_DT, 'YYYY-MM-DD HH24:MI:SS')    AS JOIN_DT
+		FROM SERVICE_USER 
+		WHERE EMAIL = #{email}
   </select>
+  
+  <update id="updateUserInfo" parameterType="hashMap">
+    /* 서비스 사용자 프로필 수정, serviceUser_SQL.updateUserInfo */
+  	UPDATE SERVICE_USER SET
+  		NICKNAME 	  = #{nickname}
+  	  , GENDER   	  = #{gender}
+  	  , TEL		 	  = #{tel}
+  	  , CITY	 	  = #{city}
+  	  , DISTRICT  	  = #{district}
+  	  <if test="profileImage != null and profileImage != ''">
+  	  	, PROFILE_IMAGE = #{profileImage}
+  	  </if>
+  	WHERE SEQ		  = #{seq}::INTEGER
+  </update>
   
 </mapper>
