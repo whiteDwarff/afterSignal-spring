@@ -121,7 +121,9 @@ public class ServiceUserImpl implements ServiceUser{
 		String securePassword = getSecurePassword(vo.getPassword(), salt);
 		// 비밀번호 불일치
 		if(!securePassword.equals(user.getPassword())) {
-			throw new ApiException(ExceptionEnum.LOGIN_002);
+			resultMap.put("msg", "gffhfhf");
+			LOGGER.info("@@@@@@@@@ MSG : " + ExceptionEnum.LOGIN_002.getMessage());
+			//throw new ApiException(ExceptionEnum.LOGIN_002);
 		} else {
 			user.setPassword(null);
 			user.setSalt(null);

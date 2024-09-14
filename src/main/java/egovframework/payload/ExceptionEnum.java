@@ -150,4 +150,7 @@ public enum ExceptionEnum {
     public static ExceptionEnum getCode(String code) {
         return map.get(code);
     }
+    public static ExceptionEnum getMessage(String message) {
+        return map.get(message);
+    }
 }

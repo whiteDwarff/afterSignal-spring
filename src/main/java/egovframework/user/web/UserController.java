@@ -83,7 +83,26 @@ public class UserController {
 	public ResponseEntity<?> signInUser(@RequestBody UserVO vo) throws Exception {
 		ApiResponse response = new ApiResponse(200, true, "success");
 
+		HashMap<String, Object> resultMap = service.signInUser(vo);
+		
+		if(resultMap.containsKey("msg")) {
+			response.setStatus(201);
+			response.setMessage((String) resultMap.get("msg"));
+		}
 		response.setResult(service.signInUser(vo));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	/**
+	 * 서비스 사용자 회원정보 변경
+	 * @param HashMap
+	 * @return ResponseEntity
+	 * */
+	@PostMapping("/updateInfo")
+	public ResponseEntity<?> updateInfo(@RequestBody HashMap<String, Object> map) throws Exception {
+		ApiResponse response = new ApiResponse(200, true, "success");
+		LOGGER.info("@@@@@@@@@@@@@@@@ : " + map.toString());
+		//response.setResult(service.signInUser(vo));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
