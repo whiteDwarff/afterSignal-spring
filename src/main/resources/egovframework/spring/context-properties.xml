@@ -11,6 +11,8 @@
                 
                 <!-- 서비스 사용자 파일 저장 경로 -->
                 <entry key="SERVICE_USER_FILE_PATH" value="/Users/whiteDwarff/upload/serviceUser" />
+                <entry key="SERVICE_USER_PATH" value="/serviceUser" />
+                
 	        </map>
 		</property>
 	</bean>

@@ -49,7 +49,7 @@
   </insert>
   
   <select id="selectUserInfo" parameterType="hashMap" resultType="UserVO">
-  	  /* 서비스 사용자 로그인정보 조회, serviceUser_SQL.selectUserInfo */
+  	    /* 서비스 사용자 로그인정보 조회, serviceUser_SQL.selectUserInfo */
   	   	SELECT 
 			  SEQ
 			, NICKNAME

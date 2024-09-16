@@ -159,16 +159,16 @@ public class ServiceUserImpl implements ServiceUser{
 		if(file != null) {
 			// 이미지 저장경로 + 폴더
 			String path = propertyService.getString("SERVICE_USER_FILE_PATH");
+			String defaultPath = propertyService.getString("SERVICE_USER_PATH");
 			String fullPath = path + File.separator + map.get("dir").toString();
 			HashMap<String, Object> fileMap = new EgovFileUtil().filieUploadUtil(file, fullPath);
 			
 			String fileName = fileMap.get("saveFileName").toString();
 			String fileExt = fileMap.get("fileExt").toString();
 			
-			String profileImage = fullPath + File.separator + fileName + fileExt;
+			String profileImage = defaultPath + File.separator + map.get("dir").toString() + File.separator +  fileName + fileExt;
 			map.put("profileImage", profileImage);
 		}
-		LOGGER.info("@@@@@@@@@@ SEQ : " + map.get("seq").toString());
 		try {
 			int result = this.mapper.updateUserInfo(map);
 			if(result == 0) {
