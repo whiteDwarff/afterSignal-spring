@@ -15,8 +15,9 @@
     	<typeAlias alias="egovMap" type="org.egovframe.rte.psl.dataaccess.util.EgovMap"/>
     	
     	<!-- 회원가입 -->
-    	<typeAlias alias="SignUpVO" type="egovframework.user.service.impl.SignUpVO"/>
-    	<typeAlias alias="UserVO" type="egovframework.user.service.impl.UserVO"/>
+    	<typeAlias alias="SignUpVO"  type="egovframework.user.service.impl.SignUpVO"/>
+    	<typeAlias alias="UserVO"    type="egovframework.user.service.impl.UserVO"/>
+    	<typeAlias alias="DepositVO" type="egovframework.deposit.service.impl.DepositVO"/>
     	
     	
     </typeAliases>

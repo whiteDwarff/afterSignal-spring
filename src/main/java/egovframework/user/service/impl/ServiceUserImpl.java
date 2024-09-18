@@ -4,12 +4,12 @@ import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.slf4j.Logger;
@@ -20,10 +20,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.cmmm.code.service.impl.CommCodeMapper;
 import egovframework.com.util.EgovFileUtil;
+import egovframework.com.util.QuasarPagingUtil;
+import egovframework.deposit.service.impl.DepositMapper;
 import egovframework.payload.ApiException;
 import egovframework.payload.ExceptionEnum;
 import egovframework.user.service.ServiceUser;
-import egovframework.user.service.impl.SignUpVO;
 
 
 
@@ -37,17 +38,20 @@ public class ServiceUserImpl implements ServiceUser{
 
 	private final ServiceUserMapper mapper;  // 사용자
 	private final CommCodeMapper codeMapper; // 공통코드
+	private final DepositMapper depositMapper;
 	
 	
-	public ServiceUserImpl(ServiceUserMapper mapper, CommCodeMapper codeMapper) {
+	public ServiceUserImpl(ServiceUserMapper mapper, CommCodeMapper codeMapper, DepositMapper depositMapper) {
 		this.mapper = mapper;
 		this.codeMapper = codeMapper;
+		this.depositMapper = depositMapper;
 	}
 	
 	/**
 	 * 이메일, 닉네임 중복여부 조회
 	 * @param  SignUpVO
 	 * @return HashMap
+	 * @throws Exception 
 	 * */
 	public HashMap<String, Object> duplicatedInfoCheck(HashMap<String, Object> map) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
@@ -69,8 +73,10 @@ public class ServiceUserImpl implements ServiceUser{
 	 * 서비스 사용자 회원가입
 	 * @param  SignUpVO
 	 * @return HashMap
+	 * @throws Exception 
 	 * */
 	@Override
+	@Transactional
 	public HashMap<String, Object> signUpUser(SignUpVO vo) throws Exception {
 		
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
@@ -87,6 +93,9 @@ public class ServiceUserImpl implements ServiceUser{
 		int result = mapper.signUpUser(vo);
 		if(result == 0) {
 			throw new ApiException(ExceptionEnum.USER_001);
+		} else {
+			// 적립금 지급
+			this.depositMapper.membershipSignupBonus(vo.getSeq());
 		}
 //		} catch(Exception e) {
 //			e.printStackTrace();
@@ -94,10 +103,10 @@ public class ServiceUserImpl implements ServiceUser{
 		return resultMap;	
 	}
 	
-	
 	/**
 	 * 공통코드 조회
 	 * @return HashMap
+	 * @throws Exception 
 	 * */
 	@Override
 	public HashMap<String, Object> getCommCode() throws Exception {
@@ -111,10 +120,11 @@ public class ServiceUserImpl implements ServiceUser{
 		return resultMap;
 	}
 	
-	/*
+	/**
 	 * 서비스 사용자 로그인
 	 * @param  UserVO
 	 * @return HashMap
+	 * @throws Exception 
 	 * */
 	@Override
 	public HashMap<String, Object> signInUser(HashMap<String, Object> map) throws Exception {
@@ -122,8 +132,6 @@ public class ServiceUserImpl implements ServiceUser{
 		
 		UserVO user = this.mapper.selectUserInfo(map);
 
-		LOGGER.info("@@@@ USER : " + user.toString());
-		
 		// 가입한 이메일이 없음
 		if(Objects.isNull(user)) {
 			throw new ApiException(ExceptionEnum.LOGIN_001);
@@ -137,8 +145,11 @@ public class ServiceUserImpl implements ServiceUser{
 		if(!securePassword.equals(user.getPassword())) {
 			resultMap.put("msg", ExceptionEnum.LOGIN_002.getMessage());
 		} else {
+			// 로그인 날짜 업데이트
+			this.mapper.updateLogindDt(user);
 			user.setPassword(null);
 			user.setSalt(null);
+			// 사용자 정보 추가
 			resultMap.put("user", user);
 		}
 		
@@ -149,6 +160,7 @@ public class ServiceUserImpl implements ServiceUser{
 	 * 서비스 샤용자 개인정보 변경 
 	 * @param HashMap, MultipartHttpServletRequest
 	 * @return HashMap
+	 * @throws Exception 
 	 * */
 	@Override
 	public HashMap<String, Object> updateInfo(HashMap<String, Object> map, MultipartHttpServletRequest request) throws Exception {
@@ -166,7 +178,7 @@ public class ServiceUserImpl implements ServiceUser{
 			String fileName = fileMap.get("saveFileName").toString();
 			String fileExt = fileMap.get("fileExt").toString();
 			
-			String profileImage = defaultPath + File.separator + map.get("dir").toString() + File.separator +  fileName + fileExt;
+			String profileImage = "localhost:8080/" + defaultPath + File.separator + map.get("dir").toString() + File.separator +  fileName + fileExt;
 			map.put("profileImage", profileImage);
 		}
 		try {
@@ -185,6 +197,64 @@ public class ServiceUserImpl implements ServiceUser{
 		return resultMap;
 	}
 
+	/**
+	 * 서비스 샤용자 비밀번호 변경 
+	 * @param HashMap
+	 * @return HashMap
+	 * @throws Exception 
+	 * */
+	public HashMap<String, Object> updatePassword(HashMap<String, Object> map) throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<>();
+		
+		UserVO user = this.mapper.selectUserInfo(map);
+		
+		byte[] salt = Base64.getDecoder().decode(user.getSalt());
+		String securePassword = getSecurePassword(map.get("password").toString(), salt);
+		
+		// 비밀번호 불일치
+		if(!securePassword.equals(user.getPassword())) {
+			resultMap.put("msg", ExceptionEnum.LOGIN_002.getMessage());
+		} else {
+			byte[] newSalt = this.getSalt();
+			String newSecurePassword = this.getSecurePassword(map.get("newPassword").toString(), newSalt);
+	        String saltString = Base64.getEncoder().encodeToString(newSalt);
+	        
+			map.put("salt", saltString);
+			map.put("password", newSecurePassword);
+			
+			int result = this.mapper.updatePassword(map);
+			
+			// 비밀번호 변경 실패
+			if(result == 0) 
+				resultMap.put("msg", ExceptionEnum.USER_002.getMessage());
+			
+			user.setPassword(null);
+			user.setSalt(null);
+		}
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 서비스 사용자 적립금 내역 조회
+	 * @param HashMap
+	 * @return HashMap
+	 * @throws Exception
+	 * */
+	public HashMap<String, Object> depositList(HashMap<String, Object> map) throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<>();
+		
+		int count = this.depositMapper.selectByPagingCount(map);
+		String maxPages = propertyService.getString("PAGELIST_VIEW_10");
+		
+		resultMap.put("maxPages", Integer.parseInt(maxPages));
+		resultMap.put("page", new QuasarPagingUtil().setPagination(count, (int) map.get("current"), map));
+		resultMap.put("list", this.depositMapper.selectByPaging(map));
+		
+		return resultMap;
+	}
+	
+	
 	
 	
 	/**

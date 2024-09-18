@@ -87,4 +87,20 @@
   	WHERE SEQ		  = #{seq}::INTEGER
   </update>
   
+  <update id="updatePassword" parameterType="hashMap">
+    /* 서비스 사용자 비밀번호 수정, serviceUser_SQL.updatePassword */
+  	UPDATE SERVICE_USER SET
+  	   PASSWORD   = #{password}
+  	 , SALT		  = #{salt}
+  	 , PWD_UPD_DT = CURRENT_TIMESTAMP
+  	WHERE SEQ 	  = #{seq}
+  </update>
+  
+  <update id="updateLogindDt" parameterType="UserVO">
+    /* 서비스 사용자 로그인 날짜 변경, serviceUser_SQL.updateLogindDt */
+    UPDATE SERVICE_USER SET
+    LOGIN_DT  = CURRENT_TIMESTAMP
+    WHERE SEQ = #{seq}
+  </update>
+  
 </mapper>

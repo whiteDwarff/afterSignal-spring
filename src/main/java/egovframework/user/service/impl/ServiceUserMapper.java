@@ -41,4 +41,18 @@ public interface ServiceUserMapper {
 	 * @return int
 	 * */
 	int updateUserInfo(HashMap<String, Object> map) throws Exception;
+	
+	/**
+	 * 서비스 사용자 비밀번호 수정
+	 * @param  HashMap
+	 * @return int
+	 * */
+	int updatePassword(HashMap<String, Object> map) throws Exception;
+	
+	/**
+	 * 서비스 사용자 로그인 날짜 변경
+	 * @param  UserVO
+	 * @return int
+	 * */
+	int updateLogindDt(UserVO vo) throws Exception;
 }
