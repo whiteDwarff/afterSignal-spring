@@ -76,7 +76,6 @@ public class ServiceUserImpl implements ServiceUser{
 	 * @throws Exception 
 	 * */
 	@Override
-	@Transactional
 	public HashMap<String, Object> signUpUser(SignUpVO vo) throws Exception {
 		
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
@@ -88,7 +87,6 @@ public class ServiceUserImpl implements ServiceUser{
         
 		vo.setSalt(saltString);
 		vo.setPassword(securePassword);
-		
 		
 		int result = mapper.signUpUser(vo);
 		if(result == 0) {
@@ -147,8 +145,7 @@ public class ServiceUserImpl implements ServiceUser{
 		} else {
 			// 로그인 날짜 업데이트
 			this.mapper.updateLogindDt(user);
-			user.setPassword(null);
-			user.setSalt(null);
+			user.setEmptyPassword();
 			// 사용자 정보 추가
 			resultMap.put("user", user);
 		}
@@ -163,23 +160,32 @@ public class ServiceUserImpl implements ServiceUser{
 	 * @throws Exception 
 	 * */
 	@Override
+	@Transactional
 	public HashMap<String, Object> updateInfo(HashMap<String, Object> map, MultipartHttpServletRequest request) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		
 		MultipartFile file = request.getFile("image");
 		
 		if(file != null) {
+			EgovFileUtil fileUtil = new EgovFileUtil();
 			// 이미지 저장경로 + 폴더
 			String path = propertyService.getString("SERVICE_USER_FILE_PATH");
 			String defaultPath = propertyService.getString("SERVICE_USER_PATH");
-			String fullPath = path + File.separator + map.get("dir").toString();
-			HashMap<String, Object> fileMap = new EgovFileUtil().filieUploadUtil(file, fullPath);
+			String dir = map.get("dir").toString();
+			String fullPath = path + File.separator + dir;
+			
+			// 프로필 이미지 저장
+			HashMap<String, Object> fileMap = fileUtil.filieUpload(file, fullPath);
 			
 			String fileName = fileMap.get("saveFileName").toString();
 			String fileExt = fileMap.get("fileExt").toString();
 			
-			String profileImage = "localhost:8080/" + defaultPath + File.separator + map.get("dir").toString() + File.separator +  fileName + fileExt;
-			map.put("profileImage", profileImage);
+			String profileImage = defaultPath + File.separator + dir + File.separator +  fileName + fileExt;
+			map.put("changedImage", profileImage);
+			
+			// 물리적 파일 삭제
+			UserVO oriUserInfo =  this.mapper.selectUserInfo(map);
+			fileUtil.fileDelete(propertyService.getString("FILE_DEFAULT_PATH"), oriUserInfo.getProfileImage());
 		}
 		try {
 			int result = this.mapper.updateUserInfo(map);
@@ -187,8 +193,7 @@ public class ServiceUserImpl implements ServiceUser{
 				resultMap.put("msg", ExceptionEnum.USER_002.getMessage());
 			} else {
 				UserVO user = this.mapper.selectUserInfo(map);
-				user.setPassword(null);
-				user.setSalt(null);
+				user.setEmptyPassword();
 				resultMap.put("user", user);
 			}
 		} catch (Exception e){
@@ -198,7 +203,7 @@ public class ServiceUserImpl implements ServiceUser{
 	}
 
 	/**
-	 * 서비스 샤용자 비밀번호 변경 
+	 * 서비스 사용자 비밀번호 변경 
 	 * @param HashMap
 	 * @return HashMap
 	 * @throws Exception 
@@ -227,9 +232,6 @@ public class ServiceUserImpl implements ServiceUser{
 			// 비밀번호 변경 실패
 			if(result == 0) 
 				resultMap.put("msg", ExceptionEnum.USER_002.getMessage());
-			
-			user.setPassword(null);
-			user.setSalt(null);
 		}
 		
 		return resultMap;

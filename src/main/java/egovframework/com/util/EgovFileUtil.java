@@ -15,19 +15,16 @@ public class EgovFileUtil {
 	 * @param MultipartFile, String
 	 * @return HashMap
 	 * */
-	public HashMap<String, Object>filieUploadUtil(MultipartFile file, String uploadPath) {
+	public HashMap<String, Object>filieUpload(MultipartFile file, String uploadPath) {
 		
 		HashMap<String, Object> resultMap = new HashMap<>();
 		
 		// 실제 파일명
 		String originalFileName = file.getOriginalFilename();
-		
 		// 파일의 확장자
 	    String ext = extractExt(originalFileName);
-	    
 	    // 서버에 저장되는 파일명
 	    String saveFileName = EgovFormBasedUUID.randomUUID().toString().replaceAll("-", "");
-	    
 	    // 저장경로
 	    String uploadFilePath = uploadPath + File.separator + saveFileName + ext;
 
@@ -50,6 +47,23 @@ public class EgovFileUtil {
 	    }
 	    
 		return resultMap;
+	}
+	
+	/**
+	 * 파일경로와 파일명을 통해 물리적 파일 삭제
+	 * @param String, String
+	 * @return Boolean
+	 * */
+	public Boolean fileDelete(String fullPath, String fileName) {
+		
+		Boolean result = false;
+		File file = new File(fullPath + File.separator + fileName);
+		
+		if(file.exists()) {
+			file.delete();
+			result = true;
+		}
+		return result;
 	}
 	
 	/**

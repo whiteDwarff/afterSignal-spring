@@ -81,8 +81,8 @@
   	  , TEL		 	  = #{tel}
   	  , CITY	 	  = #{city}
   	  , DISTRICT  	  = #{district}
-  	  <if test="profileImage != null and profileImage != ''">
-  	  	, PROFILE_IMAGE = #{profileImage}
+  	  <if test="changedImage != null and changedImage != ''">
+  	  	, PROFILE_IMAGE = #{changedImage}
   	  </if>
   	WHERE SEQ		  = #{seq}::INTEGER
   </update>

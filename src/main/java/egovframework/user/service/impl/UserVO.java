@@ -209,6 +209,12 @@ public class UserVO {
 		public UserVO build() {
 			return new UserVO(seq, nickname, email, password, salt, name, gender, tel, city, district, grade, deposit, amount, delYn, profileImage, pwdUpdDt, loginDt, joinDt);
 		}
+		
+	}
+	
+	public void setEmptyPassword() {
+		this.password = null;
+		this.salt = null;
 	}
 	
 }
