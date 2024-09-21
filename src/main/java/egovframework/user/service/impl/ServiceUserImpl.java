@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import egovframework.cmmm.code.service.impl.CommCodeMapper;
 import egovframework.com.util.EgovFileUtil;
 import egovframework.com.util.QuasarPagingUtil;
-import egovframework.deposit.service.impl.DepositMapper;
 import egovframework.payload.ApiException;
 import egovframework.payload.ExceptionEnum;
 import egovframework.user.service.ServiceUser;

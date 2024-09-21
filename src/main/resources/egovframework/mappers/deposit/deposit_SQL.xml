@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="egovframework.deposit.service.impl.DepositMapper">
+<mapper namespace="egovframework.user.service.impl.DepositMapper">
   
   <insert id="membershipSignupBonus" parameterType="Long">
     /* 서비스 사용자 회원가입 시 적립금 지급, deposit_SQL.membershipSignupBonus */
@@ -20,28 +20,26 @@
   </insert>
   
   <select id="selectByPaging" parameterType="hashMap" resultType="egovMap">
-     /* 서비스 사용자 적립금 내역 조회, deposit_SQL.selectByPaging */
+     /* 서비스 사용자 적립금/결재내역 내역 조회, deposit_SQL.selectByPaging */
 	 SELECT 
 		CHANGE_REASON
-	  , BEFORE_DEPOSIT 
-	  , AFTER_DEPOSIT 
+	  , BEFORE_${view} 					  AS BEFORE
+	  , AFTER_${view} 					  AS AFTER
 	  , TO_CHAR(USAGE_DATE, 'YYYY.MM.DD') AS USAGE_DATE 
-	  , PROC_COMM_KRNM(STATUS)			  AS STATUS
-	FROM SERVICE_USER_DEPOSIT_HISTORY
-	WHERE USER_SEQ = #{seq}
+	  , PROC_COMM_KRNM(STATUS)			  AS "statusNm"
+	  , STATUS
+	FROM SERVICE_USER_${view}_HISTORY
+	WHERE USER_SEQ 						  = #{seq}
 	ORDER BY USAGE_DATE
 	OFFSET #{offset} LIMIT #{maxPages}
   </select>
   
   <select id="selectByPagingCount" parameterType="hashMap" resultType="int">
-    /* 서비스 사용자 적립금 내역 개수 조회, deposit_SQL.selectByPagingCount */
+    /* 서비스 사용자 적립금/결재내역 내역 개수 조회, deposit_SQL.selectByPagingCount */
     SELECT COUNT(*)
-	FROM SERVICE_USER_DEPOSIT_HISTORY
+	FROM SERVICE_USER_${view}_HISTORY
 	WHERE USER_SEQ = #{seq}
   </select>
-  
-  
-  
   
   
 </mapper>

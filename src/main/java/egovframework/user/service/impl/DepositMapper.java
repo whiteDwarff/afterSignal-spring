@@ -1,4 +1,4 @@
-package egovframework.deposit.service.impl;
+package egovframework.user.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,4 +29,5 @@ public interface DepositMapper {
 	 * @return int
 	 * */
 	int selectByPagingCount(HashMap<String, Object> map) throws Exception;
+	
 }
