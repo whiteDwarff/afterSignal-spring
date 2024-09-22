@@ -62,5 +62,13 @@ public interface ServiceUser {
 	 * @throws Exception
 	 * */
 	HashMap<String, Object> depositList(HashMap<String, Object> map) throws Exception;
+	
+	/**
+	 * 서비스 사용자 이메일 찾기
+	 * @param HashMap
+	 * @return HashMap
+	 * @throws Exception
+	 * */
+	HashMap<String, Object> findUserEmail(HashMap<String, Object> map) throws Exception;
 
 }

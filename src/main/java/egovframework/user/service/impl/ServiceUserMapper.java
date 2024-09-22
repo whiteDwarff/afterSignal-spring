@@ -3,6 +3,7 @@ package egovframework.user.service.impl;
 import java.util.HashMap;
 
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
+import org.egovframe.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper
 public interface ServiceUserMapper {
@@ -55,4 +56,11 @@ public interface ServiceUserMapper {
 	 * @return int
 	 * */
 	int updateLogindDt(UserVO vo) throws Exception;
+	
+	/**
+	 * 서비스 사용자 이메일 찾기
+	 * @param HashMap
+	 * @return EgovMap
+	 * */
+	EgovMap findUserEmail(HashMap<String, Object> map) throws Exception;
 }

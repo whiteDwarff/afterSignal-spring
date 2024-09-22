@@ -157,6 +157,28 @@ public class UserController {
 		
 	}
 	
+	/**
+	 * 서비스 사용자 이메일 찾기
+	 * @param HashMap
+	 * @return ResponseEntity
+	 * @throws Exception
+	 * */
+	@PostMapping("/findUserEmail")
+	public ResponseEntity<?> findUserEmail(@RequestBody HashMap<String, Object> map) throws Exception {
+		ApiResponse response = new ApiResponse(200, true, "success");
+
+		HashMap<String, Object> resultMap = service.findUserEmail(map);
+		
+		if(resultMap.containsKey("msg")) {
+			response.setStatus(404);
+			response.setMessage(resultMap.get("msg").toString());
+		}
+		response.setResult(resultMap);
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	
 	
 
 

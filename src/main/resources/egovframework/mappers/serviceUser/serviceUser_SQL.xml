@@ -103,4 +103,17 @@
     WHERE SEQ = #{seq}
   </update>
   
+  <select id="findUserEmail" parameterType="hashMap" resultType="egovMap">
+    /* 서비스 사용자 이메일 찾기, serviceUser_SQL.findUserEmail */
+	SELECT
+	    LEFT(SPLIT_PART(EMAIL, '@', 1), LENGTH(SPLIT_PART(EMAIL, '@', 1)) / 3) || 
+	    REPEAT('*', LENGTH(SPLIT_PART(EMAIL, '@', 1)) / 3) ||                    
+	    RIGHT(SPLIT_PART(EMAIL, '@', 1), LENGTH(SPLIT_PART(EMAIL, '@', 1)) - 2 * (LENGTH(SPLIT_PART(EMAIL, '@', 1)) / 3)) || '@' || 
+	    SPLIT_PART(EMAIL, '@', 2) AS "maskedEmail"
+	  , EMAIL  
+	FROM SERVICE_USER SU
+	WHERE   NAME 				  = #{name}
+		AND TEL 				  = #{tel}
+  </select>
+  
 </mapper>

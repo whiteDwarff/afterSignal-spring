@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
+import org.egovframe.rte.psl.dataaccess.util.EgovMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -255,8 +256,25 @@ public class ServiceUserImpl implements ServiceUser{
 		return resultMap;
 	}
 	
-	
-	
+	/**
+	 * 서비스 사용자 이메일 찾기
+	 * @param HashMap
+	 * @return HashMap
+	 * @throws Exception
+	 * */
+	public HashMap<String, Object> findUserEmail(HashMap<String, Object> map) throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<>();
+
+		EgovMap result = this.mapper.findUserEmail(map);
+		
+		if(result != null) {
+			resultMap.put("info", result);
+		} else {
+			resultMap.put("msg", ExceptionEnum.USER_003.getMessage());
+		}
+		return resultMap;
+	}
+
 	
 	/**
 	 * SHA256 + salt로 암호화된 비밀번호 반환
