@@ -29,8 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.cmmm.code.service.impl.CommCodeMapper;
-import egovframework.config.security.impl.AuthUser;
-
 
 @RestController
 @RequestMapping("/api")

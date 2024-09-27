@@ -8,6 +8,7 @@ public class ApiResponse {
     private Integer status;
     private Map<String, Object> result;
 
+    public ApiResponse() {}
     public ApiResponse(Integer status, Boolean success, String message) {
         this.success = success;
         this.message = message;

@@ -12,6 +12,7 @@ import lombok.ToString;
 public class UserVO {
 
 	private Long seq;
+	private String auth;
 	private String nickname;
 	private String email;
 	private String password;
@@ -22,8 +23,6 @@ public class UserVO {
 	private String city;
 	private String district;
 	private String grade;
-	private int deposit;
-	private int amount;
 	private String delYn;
 	private String profileImage;
 	private String pwdUpdDt;
@@ -32,6 +31,7 @@ public class UserVO {
 	
 	public UserVO(
 			Long seq, 
+			String auth,
 			String nickname, 
 			String email,
 			String password,
@@ -42,8 +42,6 @@ public class UserVO {
 			String city,
 			String district,
 			String grade,
-			int deposit,
-			int amount,
 			String delYn,
 			String profileImage,
 			String pwdUpdDt,
@@ -52,6 +50,7 @@ public class UserVO {
 			) {
 		
 		this.seq = seq;
+		this.auth = auth;
 		this.nickname =  nickname;
 		this.email =  email;
 		this.password = password;
@@ -62,8 +61,6 @@ public class UserVO {
 		this.city = city;
 		this.district =  district;
 		this.grade =  grade;
-		this.deposit =  deposit;
-		this.amount = amount;
 		this.delYn = delYn;
 		this.profileImage = profileImage;
 		this.pwdUpdDt = pwdUpdDt;
@@ -74,6 +71,7 @@ public class UserVO {
 	static public class Builder {
 		
 		private Long seq;
+		private String auth;
 		private String nickname;
 		private String email;
 		private String password;
@@ -84,8 +82,6 @@ public class UserVO {
 		private String city;
 		private String district;
 		private String grade;
-		private int deposit;
-		private int amount;
 		private String delYn;
 		private String profileImage;
 		private String pwdUpdDt;
@@ -96,6 +92,7 @@ public class UserVO {
 		
 		public Builder(UserVO userVO) {
 			this.seq = userVO.seq;
+			this.auth = userVO.auth;
 			this.nickname =  userVO.nickname;
 			this.email =  userVO.email;
 			this.password = userVO.password;
@@ -106,8 +103,6 @@ public class UserVO {
 			this.city = userVO.city;
 			this.district =  userVO.district;
 			this.grade =  userVO.grade;
-			this.deposit =  userVO.deposit;
-			this.amount = userVO.amount;
 			this.delYn = userVO.delYn;
 			this.profileImage = userVO.profileImage;
 			this.pwdUpdDt = userVO.pwdUpdDt;
@@ -117,6 +112,11 @@ public class UserVO {
 		
 		public Builder seq(Long seq) {
 			this.seq = seq;
+			return this;
+		}
+		
+		public Builder auth(String auth) {
+			this.auth = auth;
 			return this;
 		}
 		
@@ -170,16 +170,6 @@ public class UserVO {
 			return this;
 		}
 		
-		public Builder deposit(int deposit) {
-			this.deposit = deposit;
-			return this;
-		}
-		
-		public Builder amount(int amount) {
-			this.amount = amount;
-			return this;
-		}
-		
 		public Builder delYn(String delYn) {
 			this.delYn = delYn;
 			return this;
@@ -207,7 +197,7 @@ public class UserVO {
 		
 		
 		public UserVO build() {
-			return new UserVO(seq, nickname, email, password, salt, name, gender, tel, city, district, grade, deposit, amount, delYn, profileImage, pwdUpdDt, loginDt, joinDt);
+			return new UserVO(seq, auth, nickname, email, password, salt, name, gender, tel, city, district, grade, delYn, profileImage, pwdUpdDt, loginDt, joinDt);
 		}
 		
 	}
