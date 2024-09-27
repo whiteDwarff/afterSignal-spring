@@ -23,6 +23,6 @@ public class LoginVO {
 	public LoginVO(UserVO vo) {
 		this.email = vo.getEmail();
 		this.password = vo.getPassword();
-		this.auth = vo.getAuth();
+		this.auth = vo.getAuthNm();
 	}
 }

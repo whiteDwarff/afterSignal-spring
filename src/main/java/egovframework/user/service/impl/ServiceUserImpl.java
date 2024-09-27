@@ -15,11 +15,15 @@ import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.psl.dataaccess.util.EgovMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.cmmm.code.service.impl.CommCodeMapper;
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.com.util.EgovFileUtil;
 import egovframework.com.util.QuasarPagingUtil;
 import egovframework.payload.ApiException;
@@ -40,13 +44,14 @@ public class ServiceUserImpl implements ServiceUser{
 	private final CommCodeMapper codeMapper; // 공통코드
 	private final DepositMapper depositMapper;
 	
-	
 	public ServiceUserImpl(ServiceUserMapper mapper, CommCodeMapper codeMapper, DepositMapper depositMapper) {
 		this.mapper = mapper;
 		this.codeMapper = codeMapper;
 		this.depositMapper = depositMapper;
 	}
 	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 	/**
 	 * 이메일, 닉네임 중복여부 조회
 	 * @param  SignUpVO
@@ -80,24 +85,18 @@ public class ServiceUserImpl implements ServiceUser{
 		
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		
-//		try {
-		byte[] salt = this.getSalt();
-		String securePassword = this.getSecurePassword(vo.getPassword(), salt);
-        String saltString = Base64.getEncoder().encodeToString(salt);
-        
-		vo.setSalt(saltString);
-		vo.setPassword(securePassword);
+		// 시큐리티 암호화 패스워드 적용
+		vo.setPassword(bCryptPasswordEncoder.encode(vo.getPassword()));
 		
 		int result = mapper.signUpUser(vo);
+		
 		if(result == 0) {
 			throw new ApiException(ExceptionEnum.USER_001);
 		} else {
 			// 적립금 지급
 			this.depositMapper.membershipSignupBonus(vo.getSeq());
 		}
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
+		
 		return resultMap;	
 	}
 	
@@ -135,21 +134,32 @@ public class ServiceUserImpl implements ServiceUser{
 			throw new ApiException(ExceptionEnum.LOGIN_001);
 		}
 		
-		byte[] salt = Base64.getDecoder().decode(user.getSalt());
-		String securePassword = getSecurePassword(map.get("password").toString(), salt);
 		
-	
+		// 스프링 시큐리티로 암호화된 비밀번호와 입력값 비교
+		Boolean isMatches = bCryptPasswordEncoder.matches(map.get("password").toString(), user.getPassword());
+
 		// 비밀번호 불일치
-		if(!securePassword.equals(user.getPassword())) {
+		if(!isMatches) {
 			resultMap.put("msg", ExceptionEnum.LOGIN_002.getMessage());
 		} else {
+			
+			EgovJwtTokenUtil jwt = new EgovJwtTokenUtil();
+			
+			LoginVO loginInfo = new LoginVO(user);
+			
+			// 사용자에게 전송할 access token과 redis에 저장할 refresh token 생성
+			String accessToken = jwt.generateToken(loginInfo);
+			String refreshToken = jwt.generateRefreshToken(loginInfo);
+			
 			// 로그인 날짜 업데이트
 			this.mapper.updateLogindDt(user);
-			user.setEmptyPassword();
+			user.setPassword(null);
 			// 사용자 정보 추가
 			resultMap.put("user", user);
+			resultMap.put("accessToken", accessToken);
+			
+			// redis 저장로직 추가
 		}
-		
 		return resultMap;
 	}
 	
@@ -193,7 +203,7 @@ public class ServiceUserImpl implements ServiceUser{
 				resultMap.put("msg", ExceptionEnum.USER_002.getMessage());
 			} else {
 				UserVO user = this.mapper.selectUserInfo(map);
-				user.setEmptyPassword();
+				user.setPassword(null);
 				resultMap.put("user", user);
 			}
 		} catch (Exception e){
@@ -213,19 +223,14 @@ public class ServiceUserImpl implements ServiceUser{
 		
 		UserVO user = this.mapper.selectUserInfo(map);
 		
-		byte[] salt = Base64.getDecoder().decode(user.getSalt());
-		String securePassword = getSecurePassword(map.get("password").toString(), salt);
-		
+		// 사용자가 입력한 비밀번호와 저장된 비밀번호가 일치한지 확인
+		Boolean isMatches = bCryptPasswordEncoder.matches(map.get("password").toString(), user.getPassword());
+
 		// 비밀번호 불일치
-		if(!securePassword.equals(user.getPassword())) {
+		if(!isMatches) {
 			resultMap.put("msg", ExceptionEnum.LOGIN_002.getMessage());
 		} else {
-			byte[] newSalt = this.getSalt();
-			String newSecurePassword = this.getSecurePassword(map.get("newPassword").toString(), newSalt);
-	        String saltString = Base64.getEncoder().encodeToString(newSalt);
-	        
-			map.put("salt", saltString);
-			map.put("password", newSecurePassword);
+			map.put("password", bCryptPasswordEncoder.encode(map.get("newPassword").toString()));
 			
 			int result = this.mapper.updatePassword(map);
 			
@@ -275,6 +280,8 @@ public class ServiceUserImpl implements ServiceUser{
 		return resultMap;
 	}
 
+	
+	// ------------------------ 시큐리티 추가 후 미사용 로직 ------------------------ 
 	
 	/**
 	 * SHA256 + salt로 암호화된 비밀번호 반환

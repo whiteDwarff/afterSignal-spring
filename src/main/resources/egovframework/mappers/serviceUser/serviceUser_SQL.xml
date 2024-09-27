@@ -24,7 +24,6 @@
   		, NICKNAME
   		, EMAIL
   		, PASSWORD
-  		, SALT
   		, NAME
   		, TEL
   		, GENDER
@@ -37,7 +36,6 @@
   		, #{nickname}
   		, #{email}
   		, #{password}
-  		, #{salt}
   		, #{name}
   		, #{tel}
   		, #{gender}
@@ -50,27 +48,26 @@
   
   <select id="selectUserInfo" parameterType="hashMap" resultType="UserVO">
   	    /* 서비스 사용자 로그인정보 조회, serviceUser_SQL.selectUserInfo */
-  	   	SELECT 
+  		SELECT 
 			  SEQ
 			, NICKNAME
 			, EMAIL
 			, NAME
 			, PASSWORD 
-			, SALT
 			, GENDER 
 			, TEL
 			, CITY
 			, DISTRICT
 			, GRADE
-			, DEPOSIT 
-			, AMOUNT
 			, DEL_YN
 			, PROFILE_IMAGE 
+			, AUTH
+			, PROC_COMM_EGNM(AUTH)						   AS AUTH_NM
 			, TO_CHAR(PWD_UPD_DT, 'YYYY-MM-DD HH24:MI:SS') AS PWD_UPD_DT
-			, TO_CHAR(LOGIN_DT, 'YYYY-MM-DD HH24:MI:SS')   AS LOGIN_DT
-			, TO_CHAR(JOIN_DT, 'YYYY-MM-DD HH24:MI:SS')    AS JOIN_DT
+			, TO_CHAR(LOGIN_DT,   'YYYY-MM-DD HH24:MI:SS') AS LOGIN_DT
+			, TO_CHAR(JOIN_DT,    'YYYY-MM-DD HH24:MI:SS') AS JOIN_DT
 		FROM SERVICE_USER 
-		WHERE EMAIL = #{email}
+		WHERE EMAIL =  #{email}
   </select>
   
   <update id="updateUserInfo" parameterType="hashMap">
@@ -91,7 +88,6 @@
     /* 서비스 사용자 비밀번호 수정, serviceUser_SQL.updatePassword */
   	UPDATE SERVICE_USER SET
   	   PASSWORD   = #{password}
-  	 , SALT		  = #{salt}
   	 , PWD_UPD_DT = CURRENT_TIMESTAMP
   	WHERE SEQ 	  = #{seq}
   </update>

@@ -13,10 +13,10 @@ public class UserVO {
 
 	private Long seq;
 	private String auth;
+	private String authNm;
 	private String nickname;
 	private String email;
 	private String password;
-	private String salt;
 	private String name;
 	private String gender;
 	private String tel;
@@ -32,10 +32,10 @@ public class UserVO {
 	public UserVO(
 			Long seq, 
 			String auth,
+			String authNm,
 			String nickname, 
 			String email,
 			String password,
-			String salt,
 			String name,
 			String gender,
 			String tel,
@@ -51,10 +51,10 @@ public class UserVO {
 		
 		this.seq = seq;
 		this.auth = auth;
+		this.authNm = authNm;
 		this.nickname =  nickname;
 		this.email =  email;
 		this.password = password;
-		this.salt = salt;
 		this.name = name;
 		this.gender = gender;
 		this.tel = tel;
@@ -72,10 +72,10 @@ public class UserVO {
 		
 		private Long seq;
 		private String auth;
+		private String authNm;
 		private String nickname;
 		private String email;
 		private String password;
-		private String salt;
 		private String name;
 		private String gender;
 		private String tel;
@@ -93,10 +93,10 @@ public class UserVO {
 		public Builder(UserVO userVO) {
 			this.seq = userVO.seq;
 			this.auth = userVO.auth;
+			this.authNm = userVO.authNm;
 			this.nickname =  userVO.nickname;
 			this.email =  userVO.email;
 			this.password = userVO.password;
-			this.salt = userVO.salt;
 			this.name = userVO.name;
 			this.gender = userVO.gender;
 			this.tel = userVO.tel;
@@ -120,6 +120,11 @@ public class UserVO {
 			return this;
 		}
 		
+		public Builder authNm(String authNm) {
+			this.authNm = authNm;
+			return this;
+		}
+		
 		public Builder nickname(String nickname) {
 			this.nickname = nickname;
 			return this;
@@ -132,11 +137,6 @@ public class UserVO {
 		
 		public Builder password(String password) {
 			this.password = password;
-			return this;
-		}
-		
-		public Builder salt(String salt) {
-			this.salt = salt;
 			return this;
 		}
 		
@@ -197,14 +197,9 @@ public class UserVO {
 		
 		
 		public UserVO build() {
-			return new UserVO(seq, auth, nickname, email, password, salt, name, gender, tel, city, district, grade, delYn, profileImage, pwdUpdDt, loginDt, joinDt);
+			return new UserVO(seq, auth, authNm, nickname, email, password, name, gender, tel, city, district, grade, delYn, profileImage, pwdUpdDt, loginDt, joinDt);
 		}
 		
-	}
-	
-	public void setEmptyPassword() {
-		this.password = null;
-		this.salt = null;
 	}
 	
 }
