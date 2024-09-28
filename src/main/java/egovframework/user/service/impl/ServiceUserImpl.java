@@ -4,6 +4,7 @@ import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Objects;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import egovframework.cmmm.code.service.impl.CommCodeMapper;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.jwt.EgovJwtTokenUtil;
+import egovframework.com.security.service.RedisService;
 import egovframework.com.util.EgovFileUtil;
 import egovframework.com.util.QuasarPagingUtil;
 import egovframework.payload.ApiException;
@@ -40,18 +42,22 @@ public class ServiceUserImpl implements ServiceUser{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceUserImpl.class);
 
-	private final ServiceUserMapper mapper;  // 사용자
-	private final CommCodeMapper codeMapper; // 공통코드
+	private final ServiceUserMapper mapper;  	// 사용자
+	private final CommCodeMapper codeMapper; 	// 공통코드
 	private final DepositMapper depositMapper;
 	
-	public ServiceUserImpl(ServiceUserMapper mapper, CommCodeMapper codeMapper, DepositMapper depositMapper) {
+	private final RedisService redisService;	// redis 
+	
+	public ServiceUserImpl(ServiceUserMapper mapper, CommCodeMapper codeMapper, DepositMapper depositMapper, RedisService redisService) {
 		this.mapper = mapper;
 		this.codeMapper = codeMapper;
 		this.depositMapper = depositMapper;
+		this.redisService = redisService;
 	}
 	
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	/**
 	 * 이메일, 닉네임 중복여부 조회
 	 * @param  SignUpVO
@@ -124,6 +130,7 @@ public class ServiceUserImpl implements ServiceUser{
 	 * @throws Exception 
 	 * */
 	@Override
+	@Transactional
 	public HashMap<String, Object> signInUser(HashMap<String, Object> map) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		
@@ -151,6 +158,9 @@ public class ServiceUserImpl implements ServiceUser{
 			String accessToken = jwt.generateToken(loginInfo);
 			String refreshToken = jwt.generateRefreshToken(loginInfo);
 			
+			// Redis에 refreshToken 저장, email, token, day
+			redisService.setValues(loginInfo.getEmail(), refreshToken, 14);
+			
 			// 로그인 날짜 업데이트
 			this.mapper.updateLogindDt(user);
 			user.setPassword(null);
@@ -158,7 +168,6 @@ public class ServiceUserImpl implements ServiceUser{
 			resultMap.put("user", user);
 			resultMap.put("accessToken", accessToken);
 			
-			// redis 저장로직 추가
 		}
 		return resultMap;
 	}

@@ -20,8 +20,7 @@ public class EgovJwtTokenUtil implements Serializable {
 	public static final long JWT_REFRESH_TOKEN_VALIDITY = 14 * 24 * 60 * 60; 	// refreshToken의 유효시간  - 2주
 
 	
-	// @Value("${jwt.secret.key}")   
-	public static final String SECRET_KEY = "aaaa";
+	public static final String SECRET_KEY = "afterSignal_jwt_key";
 	
 	/**
 	 * 토큰에서 사용자 이메일 조회
