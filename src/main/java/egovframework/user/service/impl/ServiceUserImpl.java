@@ -159,7 +159,10 @@ public class ServiceUserImpl implements ServiceUser{
 			String refreshToken = jwt.generateRefreshToken(loginInfo);
 			
 			// Redis에 refreshToken 저장, email, token, day
-			redisService.setValues(loginInfo.getEmail(), refreshToken, 14);
+			//redisService.setValues(loginInfo.getEmail(), refreshToken, 14);
+			// 유효기간 하루(테스트)
+			redisService.setValues(loginInfo.getEmail(), refreshToken, 1);
+			
 			
 			// 로그인 날짜 업데이트
 			this.mapper.updateLogindDt(user);

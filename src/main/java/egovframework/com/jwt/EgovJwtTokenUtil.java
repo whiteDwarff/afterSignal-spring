@@ -5,40 +5,36 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.util.EgovStringUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class EgovJwtTokenUtil implements Serializable {
 
-	public static final long JWT_TOKEN_VALIDITY =  60 * 60; 					// accessToken의 유효시간   - 60분  
+	// 1분 테스트
+	public static final long JWT_TOKEN_VALIDITY =  60;// * 60; 					// accessToken의 유효시간   - 60분  
 	public static final long JWT_REFRESH_TOKEN_VALIDITY = 14 * 24 * 60 * 60; 	// refreshToken의 유효시간  - 2주
 
 	
 	public static final String SECRET_KEY = "afterSignal_jwt_key";
 	
 	/**
-	 * 토큰에서 사용자 이메일 조회
-	 * @param String
-	 * @return String
-	 * */
-	public String getUserEmailFromToken(String token) {
-		Claims claims = getClaimFromToken(token);
-		return claims.get("email").toString();
-	}
-
-	/**
 	 * 토큰에서 특정 key 조회
 	 * @param String, String
 	 * @return String
 	 * */
 	public String getInfoFromToken(String key, String token) {
-		Claims claims = getClaimFromToken(token);
+		Claims claims = getClaims(token);
 		return claims.get(key).toString();
 	}
 
@@ -47,18 +43,15 @@ public class EgovJwtTokenUtil implements Serializable {
 	 * @param String
 	 * @return Claims
 	 * */
-	public Claims getClaimFromToken(String token) {
-		final Claims claims = getAllClaimsFromToken(token);
-		return claims;
-	}
-
-	/**
-	 * 토큰에서 Claims 정보 조회
-	 * @param String
-	 * @return Claims
-	 * */
-	public Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+	public Claims getClaims(String token) {
+		try {
+			return Jwts.parser()
+						.setSigningKey(SECRET_KEY)
+						.parseClaimsJws(token)
+						.getBody();
+		} catch(ExpiredJwtException e) {
+			return e.getClaims();
+		}
 	}
 
 	/**
@@ -77,6 +70,37 @@ public class EgovJwtTokenUtil implements Serializable {
 	 * */
 	public String generateRefreshToken(LoginVO loginVO) {
 		return doGenerateToken(loginVO, "Authorization", JWT_REFRESH_TOKEN_VALIDITY);
+	}
+	
+	/**
+	 * jwt 토큰 검증
+	 * @param String
+	 * @return boolean
+	 * */
+	public boolean validateToken(String jwtToken) {
+	    if (EgovStringUtil.isEmpty(jwtToken)) {
+	        return false;  // JWT가 없으면 바로 false 반환
+	    }
+	    
+	    try {
+	        Jws<Claims> claims = Jwts.parser()
+	        						 .setSigningKey(SECRET_KEY)
+	                                 .setAllowedClockSkewSeconds(300)  // 5분의 시간 차이 허용
+	        						 .parseClaimsJws(jwtToken);
+	        
+	        return !claims.getBody().getExpiration().before(new Date());
+	    } catch (ExpiredJwtException e) {
+	    	System.out.println("@@@@ ERROR : " + e.getMessage());
+	        return false;
+	    }
+	}
+	
+	/**
+	 * Response Header에 jwt 토큰 저장 
+	 * @param HttpServletResponse, String, String
+	 * */
+	public void setHeaderAccessToken(HttpServletResponse res, String value, String accessToken) {
+		res.setHeader(value, accessToken);
 	}
 
 	// 1. 토큰의 Claims 정의

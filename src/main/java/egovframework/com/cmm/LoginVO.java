@@ -14,6 +14,11 @@ public class LoginVO {
 	
 	public LoginVO() {}
 	
+	public LoginVO(String email, String auth) {
+		this.email = email;
+		this.auth = auth;
+	}
+	
 	public LoginVO(String email, String password, String auth) {
 		this.email = email;
 		this.password = password;
