@@ -17,8 +17,8 @@ public enum ExceptionEnum {
 	USER_003(HttpStatus.BAD_REQUEST , "USER_003", "가입된 이메일이 없습니다."),
 	USER_004(HttpStatus.FORBIDDEN,  "USER_004", "인가된 사용자가 아닙니다."),
 
-    JOIN_001(HttpStatus.BAD_REQUEST , "JOIN_001", "학적정보조회 기능 점검중입니다."),
-
+	JOIN_001(HttpStatus.BAD_REQUEST, "JOIN_001", "가입된 이메일이 존재합니다."),
+	
     LOGIN_001(HttpStatus.BAD_REQUEST , "LOGIN_001", "등록된 계정 정보가 없습니다."),
     LOGIN_002(HttpStatus.BAD_REQUEST , "LOGIN_002", "비밀번호가 일치하지 않습니다."),
     LOGIN_003(HttpStatus.BAD_REQUEST , "LOGIN_003", "잘못된 접근입니다."),

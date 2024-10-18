@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
@@ -131,7 +132,7 @@ public class ServiceUserImpl implements ServiceUser{
 	 * */
 	@Override
 	@Transactional
-	public HashMap<String, Object> signInUser(HashMap<String, Object> map) throws Exception {
+	public HashMap<String, Object> signInUser(HttpServletResponse res, HashMap<String, Object> map) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		
 		UserVO user = this.mapper.selectUserInfo(map);
@@ -159,9 +160,7 @@ public class ServiceUserImpl implements ServiceUser{
 			String refreshToken = jwt.generateRefreshToken(loginInfo);
 			
 			// Redis에 refreshToken 저장, email, token, day
-			//redisService.setValues(loginInfo.getEmail(), refreshToken, 14);
-			// 유효기간 하루(테스트)
-			redisService.setValues(loginInfo.getEmail(), refreshToken, 1);
+			redisService.setValues(loginInfo.getEmail(), refreshToken, 14);
 			
 			
 			// 로그인 날짜 업데이트
@@ -169,7 +168,8 @@ public class ServiceUserImpl implements ServiceUser{
 			user.setPassword(null);
 			// 사용자 정보 추가
 			resultMap.put("user", user);
-			resultMap.put("accessToken", accessToken);
+			// response Header에 jwt 토큰 추가
+			jwt.setHeaderAccessToken(res, "access-token", accessToken);
 			
 		}
 		return resultMap;

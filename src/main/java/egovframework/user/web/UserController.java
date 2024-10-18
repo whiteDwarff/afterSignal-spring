@@ -3,6 +3,7 @@ package egovframework.user.web;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.slf4j.Logger;
@@ -85,10 +86,10 @@ public class UserController {
 	 * @throws Exception
 	 * */
 	@PostMapping("/signInUser")
-	public ResponseEntity<?> signInUser(@RequestBody HashMap<String, Object> map) throws Exception {
+	public ResponseEntity<?> signInUser(@RequestBody HashMap<String, Object> map, HttpServletResponse res) throws Exception {
 		ApiResponse response = new ApiResponse(200, true, "success");
 
-		HashMap<String, Object> resultMap = service.signInUser(map);
+		HashMap<String, Object> resultMap = service.signInUser(res, map);
 		
 		if(resultMap.containsKey("msg")) {
 			response.setStatus(201);
@@ -178,8 +179,4 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	
-	
-
-
 }

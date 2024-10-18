@@ -49,7 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	        try {
 	        	email = jwtTokenUtil.getInfoFromToken("email", accessToken);
-	        	logger.debug("===>>> email = " + email);
 
 	            if (email == null) {
 	                verificationFlag =  false;

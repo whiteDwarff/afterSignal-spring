@@ -1,3 +1,4 @@
+
 package egovframework.com.security;
 
 import egovframework.com.jwt.JwtAuthenticationEntryPoint;
@@ -26,23 +27,26 @@ public class SecurityConfig {
     	"/serviceUser/profile/*"		// 사용자 프로필 이미지 경로
     };
     
-    // 협업사 Get 요청 시 인증예외 List
-    private String[] SELLER_GET_WHITELIST = {
+    // 스토어 Get 요청 시 인증예외 List
+    private String[] STORE_GET_WHITELIST = {
     		
     };
     
 
     // 사용자 인증 예외 List
     private String[] USER_AUTH_WHITELIST = {
+    	"/api/common/*",
     	"/api/user/signUp",
     	"/api/user/signUpUser",
     	"/api/user/signInUser",
     	"/api/user/duplicatedInfoCheck",
     	"/api/user/findUserEmail",
     };
-    // 협업사 인증 예외 List
-    private String[] SELLER_AUTH_WHITELIST = {
-    		
+    // 스토어 인증 예외 List
+    private String[] STORE_AUTH_WHITELIST = {
+    	"/api/store/duplicatedInfoCheck",
+    	"/api/store/apply",
+    	"/api/store/login",
     };
     
     
@@ -87,10 +91,10 @@ public class SecurityConfig {
                 		.antMatchers("/admin/**").hasRole("ADMIN") //ROLE_생략=자동으로 입력됨
                          // permitAll() : 소스의 접근을 인증절차 없이 허용
                 		.antMatchers(USER_AUTH_WHITELIST).permitAll()
-                		.antMatchers(SELLER_AUTH_WHITELIST).permitAll()
+                		.antMatchers(STORE_AUTH_WHITELIST).permitAll()
                 		 // get 요청 시 인증절차 없이 허용
                         .antMatchers(HttpMethod.GET,USER_GET_WHITELIST).permitAll()
-                        .antMatchers(HttpMethod.GET,SELLER_GET_WHITELIST).permitAll()
+                        .antMatchers(HttpMethod.GET,STORE_GET_WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 ).sessionManagement((sessionManagement) ->
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

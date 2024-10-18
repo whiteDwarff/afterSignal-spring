@@ -2,6 +2,8 @@ package egovframework.user.service;
 
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.user.service.impl.SignUpVO;
@@ -37,7 +39,7 @@ public interface ServiceUser {
 	 * @return HashMap
 	 * @throws Exception 
 	 * */
-	HashMap<String, Object> signInUser(HashMap<String, Object> map) throws Exception;
+	HashMap<String, Object> signInUser(HttpServletResponse res, HashMap<String, Object> map) throws Exception;
 	
 	/**
 	 * 서비스 샤용자 개인정보 변경 

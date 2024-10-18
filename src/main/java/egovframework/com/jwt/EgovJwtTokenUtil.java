@@ -1,3 +1,4 @@
+
 package egovframework.com.jwt;
 
 import java.io.Serializable;
@@ -21,8 +22,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class EgovJwtTokenUtil implements Serializable {
 
-	// 1분 테스트
-	public static final long JWT_TOKEN_VALIDITY =  60;// * 60; 					// accessToken의 유효시간   - 60분  
+	public static final long JWT_TOKEN_VALIDITY =  60 * 60; 					// accessToken의 유효시간   - 60분  
 	public static final long JWT_REFRESH_TOKEN_VALIDITY = 14 * 24 * 60 * 60; 	// refreshToken의 유효시간  - 2주
 
 	
