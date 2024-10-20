@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.payload.ApiResponse;
 import egovframework.store.service.StoreService;
@@ -53,6 +54,26 @@ public class StoreController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	/**
+	 * 스토어 가입 신청
+	 * @param  HashMap, MultipartHttpServletRequest
+	 * @return ResponseEntity
+	 * @throws Exception
+	 * */
+	@PostMapping("apply")
+	public ResponseEntity<?> apply(
+			  HashMap<String, Object> param
+			, MultipartHttpServletRequest multiRequest
+		)  throws Exception { 
+		ApiResponse response = new ApiResponse(200, true, "success");
+
+		EgovMap resultMap = service.apply(param, multiRequest);
+		
+		response.setResult(resultMap);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+		
 	
 	
 	
