@@ -41,7 +41,7 @@ public class EgovFileUtil {
 
 	    try {
 	    	 file.transferTo(path.toFile());
-	    	 resultMap.put("filePath", uploadPath + File.separator +  saveFileName);
+	    	 resultMap.put("filePath", uploadPath + File.separator);
 	    	 resultMap.put("saveFileName", saveFileName);
 	    	 resultMap.put("originalFileName", originalFileName);
 	    	 resultMap.put("fileExt", ext);
@@ -66,7 +66,7 @@ public class EgovFileUtil {
 			  if(fileName.equals("dzFile[" + String.valueOf(num) + "]")) {
 				  MultipartFile file = entry.getValue();
 				  HashMap<String, Object> map = filieUpload(file, uploadPath);
-				  map.put("seq", num);
+				  map.put("seq", num + 1);
 				  resultMap.add(map);
 				  num++;
 			  } 
@@ -78,7 +78,7 @@ public class EgovFileUtil {
 	 * @param String, String
 	 * @return Boolean
 	 * */
-	public Boolean fileDelete(String fullPath, String fileName) {
+	public static Boolean fileDelete(String fullPath, String fileName) {
 		
 		Boolean result = false;
 		File file = new File(fullPath + File.separator + fileName);

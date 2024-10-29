@@ -189,7 +189,6 @@ public class ServiceUserImpl implements ServiceUser{
 		MultipartFile file = request.getFile("image");
 		
 		if(file != null) {
-			EgovFileUtil fileUtil = new EgovFileUtil();
 			// 이미지 저장경로 + 폴더
 			String path = propertyService.getString("SERVICE_USER_FILE_PATH");
 			String defaultPath = propertyService.getString("SERVICE_USER_PATH");
@@ -197,7 +196,7 @@ public class ServiceUserImpl implements ServiceUser{
 			String fullPath = path + File.separator + dir;
 			
 			// 프로필 이미지 저장
-			HashMap<String, Object> fileMap = fileUtil.filieUpload(file, fullPath);
+			HashMap<String, Object> fileMap = EgovFileUtil.filieUpload(file, fullPath);
 			
 			String fileName = fileMap.get("saveFileName").toString();
 			String fileExt = fileMap.get("fileExt").toString();
@@ -207,10 +206,11 @@ public class ServiceUserImpl implements ServiceUser{
 			
 			// 물리적 파일 삭제
 			UserVO oriUserInfo =  this.mapper.selectUserInfo(map);
-			fileUtil.fileDelete(propertyService.getString("FILE_DEFAULT_PATH"), oriUserInfo.getProfileImage());
+			EgovFileUtil.fileDelete(propertyService.getString("FILE_DEFAULT_PATH"), oriUserInfo.getProfileImage());
 		}
 		try {
 			int result = this.mapper.updateUserInfo(map);
+			
 			if(result == 0) {
 				resultMap.put("msg", ExceptionEnum.USER_002.getMessage());
 			} else {

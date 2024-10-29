@@ -2,19 +2,24 @@ package egovframework.store.service.impl;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.psl.dataaccess.util.EgovMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.util.EgovFileUtil;
+import egovframework.payload.ApiException;
 import egovframework.payload.ExceptionEnum;
 import egovframework.store.service.StoreService;
 import egovframework.store.web.StoreController;
@@ -29,6 +34,9 @@ public class StoreServjceImpl implements StoreService {
 	public StoreServjceImpl(StoreMapper mapper) {
 		this.mapper = mapper;
 	}
+	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Resource(name="propertyService")
 	protected EgovPropertyService propertyService;
@@ -57,28 +65,44 @@ public class StoreServjceImpl implements StoreService {
 	 * @return EgovMap
 	 * @throws Exception
 	 * */
+	@Transactional
 	public EgovMap apply(HashMap<String, Object> param, MultipartHttpServletRequest multiRequest) throws Exception {
 		EgovMap resultMap = new EgovMap();
 		
-		LOGGER.info("param ----------->> " + param.toString());
-		 Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
-		
-		String defaultPath = propertyService.getString("STORE_FILE_PATH");
-		String dir = "conceptImage";
-		
-		EgovFileUtil.dropzoneFileUpload(multiRequest, defaultPath + File.separator + dir);
-		// 파일 목록 순회
-	    for (Map.Entry<String, MultipartFile> entry : fileMap.entrySet()) {
-	        String fileName = entry.getKey();  // 파일의 이름
-	        MultipartFile file = entry.getValue();  // MultipartFile 객체
-
-	        // 파일 이름과 파일의 크기를 출력하거나 원하는 처리
-	        System.out.println("File Name: " + fileName);
-	        System.out.println("File Size: " + file.getSize());
-
-	        // 추가적으로 원하는 로직 (예: 파일 저장, 검증 등)을 여기서 처리 가능
-	    }
-		
+		try {
+			// 시큐리티 패스워드 적용
+			String securePassword = bCryptPasswordEncoder.encode(param.get("password").toString());
+			param.put("password", securePassword);
+			
+			// 스토어 정보 저장
+			int result = mapper.insertStoreInfo(param);
+			
+			if(result > 0) {
+				
+				String defaultPath = propertyService.getString("STORE_FILE_PATH");
+				String dir = "businessLicense";
+				
+				// 사업자 등록증 저장
+				MultipartFile businessFile = multiRequest.getFile("businessRegistration");
+			    HashMap<String, Object> businessFileMap = EgovFileUtil.filieUpload(businessFile, defaultPath + File.separator + dir);
+			    businessFileMap.put("storeSeq", param.get("storeSeq"));
+			    businessFileMap.put("type", "file");
+		    	mapper.insertStroeRefFiles(businessFileMap);
+				
+				// 스토어 이미지 저장
+		    	dir = "conceptImage";
+				List<HashMap<String, Object>> dropzoneFileMap = EgovFileUtil.dropzoneFileUpload(multiRequest, defaultPath + File.separator + dir);
+				
+			    for(HashMap<String, Object> map : dropzoneFileMap) {
+			    	map.put("storeSeq", param.get("storeSeq"));
+			    	map.put("type", "image");
+			    	mapper.insertStroeRefFiles(map);
+			    }
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			resultMap.put("msg", ExceptionEnum.STORE_001.getMessage());
+		}
 		
 		
 		return resultMap;

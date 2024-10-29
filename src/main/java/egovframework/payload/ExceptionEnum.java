@@ -22,10 +22,10 @@ public enum ExceptionEnum {
     LOGIN_001(HttpStatus.BAD_REQUEST , "LOGIN_001", "등록된 계정 정보가 없습니다."),
     LOGIN_002(HttpStatus.BAD_REQUEST , "LOGIN_002", "비밀번호가 일치하지 않습니다."),
     LOGIN_003(HttpStatus.BAD_REQUEST , "LOGIN_003", "잘못된 접근입니다."),
-    LOGIN_004(HttpStatus.BAD_REQUEST , "LOGIN_004", "웨일스페이스 로그인 실패"),
     LOGIN_005(HttpStatus.BAD_REQUEST , "LOGIN_005", "동일 아이디로 접속하여 로그아웃 됩니다."),
     LOGIN_006(HttpStatus.BAD_REQUEST , "LOGIN_006", "사용할 수 없는 계정입니다."),
-
+    
+    STORE_001(HttpStatus.BAD_REQUEST, "STORE_001", "가입 신청에 실패하였습니다."),
 
 
     // 500

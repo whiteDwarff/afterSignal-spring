@@ -3,9 +3,75 @@
 <mapper namespace="egovframework.store.service.impl.StoreMapper">
   
   <select id="duplicatedEmailCheck" parameterType="hashMap" resultType="int">
-  	/* 서비스 사용자 이메일 중복검사, serviceUser_SQL.duplicatedEmailCheck */
+  	/* 스토어 이메일 중복검사, serviceUser_SQL.duplicatedEmailCheck */
   	SELECT COUNT(*) FROM SERVICE_STORE
   	WHERE EMAIL = #{email}
   </select>
   
+  <insert id="insertStoreInfo" parameterType="hashMap">
+  	/* 스토어 가입신청, serviceUser_SQL.insertStoreInfo */
+  	<selectKey resultType="int" keyProperty="storeSeq" order="BEFORE">
+  		SELECT COALESCE(MAX(SEQ), 0) + 1 FROM SERVICE_STORE
+  	</selectKey>
+  		INSERT INTO SERVICE_STORE (
+	  		  	SEQ
+	  		  , OWNER_NAME
+	  		  , EMAIL
+	  		  , TEL
+	  		  , PASSWORD
+	  		  , BUSINESS_NUMBER
+	  		  , STORE_NAME
+	  		  , STORE_NUMBER
+	  		  , URL
+	  		  , INSTAGRAM
+	  		  , CITY
+	  		  , DISTRICT
+	  		  , POST_CODE
+	  		  , ADDR
+	  		  , DETAIL_ADDR
+	  		  , EXTRA_ADDR
+	  		  , JOIN_DT
+		) VALUES (
+			   #{storeSeq}
+			 , #{ownerName}
+			 , #{email}
+			 , #{firstTel} || '-' || #{otherTel}
+			 , #{password}
+			 , #{businessNumber}
+			 , #{storeName}
+			 , #{storeFirstTel} || '-' || #{storeOtherTel}
+			 , #{url}
+			 , #{instagram}
+			 , #{city}
+			 , #{district}
+			 , #{postCode}
+			 , #{addr}
+			 , #{detailAddr}
+			 , #{extraAddr}
+			 , CURRENT_TIMESTAMP
+		)
+  </insert>
+  
+  
+  <select id="insertStroeRefFiles" parameterType="hashMap">
+  	/* 스토어 첨부파일 저장, serviceUser_SQL.insertStroeRefFiles  */
+  	INSERT INTO STORE_REF_FILE (
+  		  STORE_SEQ
+  		, FILE_SEQ
+  		, TYPE
+  		, ORG_FILE_NAME
+  		, SAVE_FILE_NAME
+  		, FILE_PATH
+  		, FILE_SIZE
+  	) VALUES (
+  		  #{storeSeq}
+  		, ( SELECT COALESCE(MAX(FILE_SEQ), 0) + 1 FROM 
+  			STORE_REF_FILE WHERE STORE_SEQ = #{storeSeq} )
+  		, #{type}
+  		, #{originalFileName}
+  		, #{saveFileName}
+  		, #{filePath}
+  		, #{fileSize}
+  	)
+  </select>  
 </mapper>
