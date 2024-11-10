@@ -44,9 +44,10 @@ public class SecurityConfig {
     };
     // 스토어 인증 예외 List
     private String[] STORE_AUTH_WHITELIST = {
-    	"/api/store/duplicatedInfoCheck",
-    	"/api/store/apply",
+    	"/api/store/duplicatedEmailCheck",	// 이메일 중복 검사
+    	"/api/store/apply",					// 가입신청 
     	"/api/store/login",
+    	"/api/store/getStoreInfo",			// 이메일 중복 검사
     };
     
     

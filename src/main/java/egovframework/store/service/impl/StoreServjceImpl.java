@@ -78,16 +78,21 @@ public class StoreServjceImpl implements StoreService {
 			int result = mapper.insertStoreInfo(param);
 			
 			if(result > 0) {
-				
-				String defaultPath = propertyService.getString("STORE_FILE_PATH");
+				String path = propertyService.getString("STORE_FILE_PATH");
+				String defaultPath = propertyService.getString("STORE_PATH");
 				String dir = "businessLicense";
+				String fullPath = path + File.separator + dir;
 				
 				// 사업자 등록증 저장
 				MultipartFile businessFile = multiRequest.getFile("businessRegistration");
-			    HashMap<String, Object> businessFileMap = EgovFileUtil.filieUpload(businessFile, defaultPath + File.separator + dir);
+			    HashMap<String, Object> businessFileMap = EgovFileUtil.filieUpload(businessFile, fullPath);
 			    businessFileMap.put("storeSeq", param.get("storeSeq"));
 			    businessFileMap.put("type", "file");
-		    	mapper.insertStroeRefFiles(businessFileMap);
+			    businessFileMap.put("filePath", param.get("storeSeq"));
+			    //String fileName = businessFileMap.get("saveFileName").toString();
+				//String profileImage = defaultPath + File.separator + dir + File.separator +  fileName;
+		    	
+				mapper.insertStroeRefFiles(businessFileMap);
 				
 				// 스토어 이미지 저장
 		    	dir = "conceptImage";
@@ -98,12 +103,29 @@ public class StoreServjceImpl implements StoreService {
 			    	map.put("type", "image");
 			    	mapper.insertStroeRefFiles(map);
 			    }
+			    resultMap.put("seq", param.get("storeSeq"));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			resultMap.put("msg", ExceptionEnum.STORE_001.getMessage());
 		}
 		
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 스토어 정보 조회
+	 * @param  HashMap
+	 * @return EgovMap
+	 * @throws Exception
+	 * */
+	@Override
+	public EgovMap getStoreInfo(HashMap<String, Object> param) throws Exception {		
+		EgovMap resultMap = new EgovMap();
+		
+		resultMap.put("info", mapper.getStoreInfo(param));
+		resultMap.put("fileList", mapper.getStoreRefFile(param));
 		
 		return resultMap;
 	}

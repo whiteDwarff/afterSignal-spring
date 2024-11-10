@@ -26,11 +26,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Value("${server.dir.serviceUser}")
 	private String serviceUserDir;
 	
+	// 스토어 이미지 저장 경로
+	@Value("${server.dir.store}")
+	private String storeDir;
+	
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	// 서비스 사용자 프로필 이미지
    	    registry.addResourceHandler(serviceUserDir  + "/**")
    	    		.addResourceLocations("file://" + filePath + "/" + serviceUserDir + "/");
+   	    
+   	    // 스토어 사용자 프로필 이미지
+   	    registry.addResourceHandler(storeDir  + "/**")
+   	    		.addResourceLocations("file://" + filePath + "/" + storeDir + "/**/");
 
   }
     

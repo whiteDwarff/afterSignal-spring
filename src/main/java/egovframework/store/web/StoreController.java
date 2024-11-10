@@ -74,8 +74,20 @@ public class StoreController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	/**
+	 * 스토어 정보 조회
+	 * @param  HashMap
+	 * @return ResponseEntity
+	 * @throws Exception
+	 * */
+	@PostMapping("getStoreInfo")
+	public ResponseEntity<?> getStoreInfo(@RequestBody HashMap<String, Object> param)  throws Exception { 
+		ApiResponse response = new ApiResponse(200, true, "success");
+
+		EgovMap resultMap = service.getStoreInfo(param);
 		
-	
-	
-	
+		response.setResult(resultMap);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
 }

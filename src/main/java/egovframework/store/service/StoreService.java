@@ -22,4 +22,12 @@ public interface StoreService {
 	 * @throws Exception
 	 * */
 	EgovMap apply(HashMap<String, Object> param, MultipartHttpServletRequest multiRequest) throws Exception;
+
+	/**
+	 * 스토어 정보 조회
+	 * @param  HashMap
+	 * @return EgovMap
+	 * @throws Exception
+	 * */
+	EgovMap getStoreInfo(HashMap<String, Object> param) throws Exception;
 }

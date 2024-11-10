@@ -43,7 +43,7 @@ public class EgovFileUtil {
 	    	 file.transferTo(path.toFile());
 	    	 resultMap.put("filePath", uploadPath + File.separator);
 	    	 resultMap.put("saveFileName", saveFileName);
-	    	 resultMap.put("originalFileName", originalFileName);
+	    	 resultMap.put("originalFileName", originalFileName + ext);
 	    	 resultMap.put("fileExt", ext);
 	    	 resultMap.put("fileSize", file.getSize());
 	    } catch(IOException e) {

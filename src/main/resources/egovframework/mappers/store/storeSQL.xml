@@ -52,9 +52,8 @@
 		)
   </insert>
   
-  
   <select id="insertStroeRefFiles" parameterType="hashMap">
-  	/* 스토어 첨부파일 저장, serviceUser_SQL.insertStroeRefFiles  */
+  	/* 스토어 첨부파일 저장, serviceUser_SQL.insertStroeRefFiles */
   	INSERT INTO STORE_REF_FILE (
   		  STORE_SEQ
   		, FILE_SEQ
@@ -73,5 +72,36 @@
   		, #{filePath}
   		, #{fileSize}
   	)
+  </select>
+  
+  <select id="getStoreInfo" parameterType="hashMap" resultType="EgovMap">
+	 /* 스토어 정보 조회, serviceUser_SQL.getStoreInfo */
+	 SELECT 
+		  OWNER_NAME 																
+		, EMAIL 
+		, TEL
+		, BUSINESS_NUMBER 
+		, STORE_NAME 
+		, STORE_NUMBER 
+		, URL 
+		, INSTAGRAM 
+		, PROC_COMM_KRNM(CITY) 	   AS "cityNm" 
+		, PROC_COMM_KRNM(DISTRICT) AS "districtNm"
+		, '(' || POST_CODE || ') ' || ADDR  || ' ' || COALESCE(DETAIL_ADDR, '') || EXTRA_ADDR AS ADDR
+	FROM SERVICE_STORE
+	WHERE SEQ = #{storeSeq}::INTEGER
   </select>  
+
+  <select id="getStoreRefFile" parameterType="hashMap" resultType="EgovMap">
+	 /* 스토어 첨부파일 조회, serviceUser_SQL.getStoreRefFile */
+	 SELECT 
+		  FILE_SEQ
+		, TYPE 
+		, FILE_PATH 
+		, ORG_FILE_NAME 
+		, SAVE_FILE_NAME 
+	FROM STORE_REF_FILE SRF WHERE store_seq = #{storeSeq}::INTEGER
+	ORDER BY FILE_SEQ ASC 
+  </select>
+
 </mapper>

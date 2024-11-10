@@ -199,9 +199,7 @@ public class ServiceUserImpl implements ServiceUser{
 			HashMap<String, Object> fileMap = EgovFileUtil.filieUpload(file, fullPath);
 			
 			String fileName = fileMap.get("saveFileName").toString();
-			String fileExt = fileMap.get("fileExt").toString();
-			
-			String profileImage = defaultPath + File.separator + dir + File.separator +  fileName + fileExt;
+			String profileImage = defaultPath + File.separator + dir + File.separator +  fileName;
 			map.put("changedImage", profileImage);
 			
 			// 물리적 파일 삭제
