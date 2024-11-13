@@ -190,16 +190,15 @@ public class ServiceUserImpl implements ServiceUser{
 		
 		if(file != null) {
 			// 이미지 저장경로 + 폴더
-			String path = propertyService.getString("SERVICE_USER_FILE_PATH");
-			String defaultPath = propertyService.getString("SERVICE_USER_PATH");
 			String dir = map.get("dir").toString();
-			String fullPath = path + File.separator + dir;
+			String path = propertyService.getString("SERVICE_USER_FILE_PATH")   + File.separator + dir;
+			String defaultPath = propertyService.getString("SERVICE_USER_PATH") + File.separator + dir;
 			
 			// 프로필 이미지 저장
-			HashMap<String, Object> fileMap = EgovFileUtil.filieUpload(file, fullPath);
+			HashMap<String, Object> fileMap = EgovFileUtil.filieUpload(file, path);
 			
 			String fileName = fileMap.get("saveFileName").toString();
-			String profileImage = defaultPath + File.separator + dir + File.separator +  fileName;
+			String profileImage = defaultPath + File.separator +  fileName;
 			map.put("changedImage", profileImage);
 			
 			// 물리적 파일 삭제

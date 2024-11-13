@@ -78,29 +78,31 @@ public class StoreServjceImpl implements StoreService {
 			int result = mapper.insertStoreInfo(param);
 			
 			if(result > 0) {
-				String path = propertyService.getString("STORE_FILE_PATH");
-				String defaultPath = propertyService.getString("STORE_PATH");
 				String dir = "businessLicense";
-				String fullPath = path + File.separator + dir;
+				String path = propertyService.getString("STORE_FILE_PATH") + File.separator + dir;
+				String defaultPath = propertyService.getString("STORE_PATH") + File.separator + dir;
 				
 				// 사업자 등록증 저장
 				MultipartFile businessFile = multiRequest.getFile("businessRegistration");
-			    HashMap<String, Object> businessFileMap = EgovFileUtil.filieUpload(businessFile, fullPath);
+			    
+				HashMap<String, Object> businessFileMap = EgovFileUtil.filieUpload(businessFile, path);
 			    businessFileMap.put("storeSeq", param.get("storeSeq"));
 			    businessFileMap.put("type", "file");
-			    businessFileMap.put("filePath", param.get("storeSeq"));
-			    //String fileName = businessFileMap.get("saveFileName").toString();
-				//String profileImage = defaultPath + File.separator + dir + File.separator +  fileName;
-		    	
+			    businessFileMap.put("filePath", defaultPath);
+			    
 				mapper.insertStroeRefFiles(businessFileMap);
 				
 				// 스토어 이미지 저장
 		    	dir = "conceptImage";
-				List<HashMap<String, Object>> dropzoneFileMap = EgovFileUtil.dropzoneFileUpload(multiRequest, defaultPath + File.separator + dir);
+				path = propertyService.getString("STORE_FILE_PATH") + File.separator + dir;
+
+				List<HashMap<String, Object>> dropzoneFileMap = EgovFileUtil.dropzoneFileUpload(multiRequest, path);
 				
 			    for(HashMap<String, Object> map : dropzoneFileMap) {
 			    	map.put("storeSeq", param.get("storeSeq"));
 			    	map.put("type", "image");
+			    	map.put("filePath", propertyService.getString("STORE_PATH") + File.separator + dir);
+			    	
 			    	mapper.insertStroeRefFiles(map);
 			    }
 			    resultMap.put("seq", param.get("storeSeq"));
@@ -109,7 +111,6 @@ public class StoreServjceImpl implements StoreService {
 			e.printStackTrace();
 			resultMap.put("msg", ExceptionEnum.STORE_001.getMessage());
 		}
-		
 		
 		return resultMap;
 	}

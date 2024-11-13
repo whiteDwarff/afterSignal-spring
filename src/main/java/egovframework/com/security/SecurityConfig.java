@@ -24,12 +24,13 @@ public class SecurityConfig {
 
 	 // 사용자 Get 요청 시 인증예외 List
     private String[] USER_GET_WHITELIST = {
-    	"/serviceUser/profile/*"		// 사용자 프로필 이미지 경로
+    	"/serviceUser/profile/*"	// 사용자 프로필 이미지 경로
     };
     
     // 스토어 Get 요청 시 인증예외 List
     private String[] STORE_GET_WHITELIST = {
-    		
+    	"/store/conceptImage/*",	// 스토어 컨셉 이미지
+    	"/store/businessLicense/*"	// 스토어 사업자 등록증
     };
     
 

@@ -16,7 +16,7 @@ public class EgovFileUtil {
 	
 	/**
 	 * 하나의 파일 저장
-	 * @param MultipartFile, String
+	 * @param MultipartFile file, String uploadPath
 	 * @return HashMap
 	 * */
 	public static HashMap<String, Object>filieUpload(MultipartFile file, String uploadPath) {
@@ -28,9 +28,9 @@ public class EgovFileUtil {
 		// 파일의 확장자
 	    String ext = extractExt(originalFileName);
 	    // 서버에 저장되는 파일명
-	    String saveFileName = EgovFormBasedUUID.randomUUID().toString().replaceAll("-", "");
+	    String saveFileName = EgovFormBasedUUID.randomUUID().toString().replaceAll("-", "") + ext;
 	    // 저장경로
-	    String uploadFilePath = uploadPath + File.separator + saveFileName + ext;
+	    String uploadFilePath = uploadPath + File.separator + saveFileName;
 
 	    File uploadFile = new File(uploadFilePath);
 
@@ -43,7 +43,7 @@ public class EgovFileUtil {
 	    	 file.transferTo(path.toFile());
 	    	 resultMap.put("filePath", uploadPath + File.separator);
 	    	 resultMap.put("saveFileName", saveFileName);
-	    	 resultMap.put("originalFileName", originalFileName + ext);
+	    	 resultMap.put("originalFileName", originalFileName);
 	    	 resultMap.put("fileExt", ext);
 	    	 resultMap.put("fileSize", file.getSize());
 	    } catch(IOException e) {

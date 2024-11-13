@@ -34,11 +34,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	// 서비스 사용자 프로필 이미지
    	    registry.addResourceHandler(serviceUserDir  + "/**")
-   	    		.addResourceLocations("file://" + filePath + "/" + serviceUserDir + "/");
+   	    		.addResourceLocations("file://" + filePath + serviceUserDir + "/");
    	    
-   	    // 스토어 사용자 프로필 이미지
-   	    registry.addResourceHandler(storeDir  + "/**")
-   	    		.addResourceLocations("file://" + filePath + "/" + storeDir + "/**/");
+   	    // 스토어 사용자 파일경로 설정
+	   	 registry.addResourceHandler(storeDir + "/**")
+	   	 	.addResourceLocations("file://" + filePath + storeDir + "/");
 
   }
     
