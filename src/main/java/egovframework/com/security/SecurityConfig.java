@@ -49,6 +49,7 @@ public class SecurityConfig {
     	"/api/store/apply",					// 가입신청 
     	"/api/store/login",
     	"/api/store/getStoreInfo",			// 이메일 중복 검사
+    	"/api/store/fileDown",				// 파일 다운로드
     };
     
     

@@ -26,6 +26,7 @@ public enum ExceptionEnum {
     LOGIN_006(HttpStatus.BAD_REQUEST , "LOGIN_006", "사용할 수 없는 계정입니다."),
     
     STORE_001(HttpStatus.BAD_REQUEST, "STORE_001", "가입 신청에 실패하였습니다."),
+    STORE_002(HttpStatus.BAD_REQUEST, "STORE_002", "다운로드 가능한 파일이 존재하지 않습니다."),
 
 
     // 500

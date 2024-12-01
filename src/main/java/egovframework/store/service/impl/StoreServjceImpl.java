@@ -130,4 +130,23 @@ public class StoreServjceImpl implements StoreService {
 		
 		return resultMap;
 	}
+	
+	/**
+	 * 스토어 파일 다운로드
+	 * @param  HashMap
+	 * @return EgovMap
+	 * @throws Exception
+	 * */
+	@Override
+	public EgovMap storeFileDown(HashMap<String, Object> param) throws Exception {
+		EgovMap resultMap = new EgovMap();
+		List<EgovMap> list = mapper.getStoreRefFile(param);
+		
+		if(list.size() > 0) 
+			//resultMap.put("file", list.get(0));
+			return list.get(0);
+		else 
+			resultMap.put("msg", ExceptionEnum.STORE_002.getMessage());
+		return resultMap;
+	}
 }

@@ -101,7 +101,10 @@
 		, ORG_FILE_NAME 
 		, SAVE_FILE_NAME 
 	FROM STORE_REF_FILE SRF WHERE store_seq = #{storeSeq}::INTEGER
+	<if test="fileSeq != null and fileSeq != ''">
+		AND FILE_SEQ = #{fileSeq}::INTEGER
+	
+	</if>
 	ORDER BY FILE_SEQ ASC 
   </select>
-
 </mapper>

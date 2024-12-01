@@ -30,4 +30,12 @@ public interface StoreService {
 	 * @throws Exception
 	 * */
 	EgovMap getStoreInfo(HashMap<String, Object> param) throws Exception;
+	
+	/**
+	 * 스토어 파일 다운로드
+	 * @param  HashMap
+	 * @return EgovMap
+	 * @throws Exception
+	 * */
+	EgovMap storeFileDown(HashMap<String, Object> param) throws Exception;
 }
