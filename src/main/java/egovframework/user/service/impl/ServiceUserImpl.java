@@ -139,7 +139,9 @@ public class ServiceUserImpl implements ServiceUser{
 
 		// 가입한 이메일이 없음
 		if(Objects.isNull(user)) {
-			throw new ApiException(ExceptionEnum.LOGIN_001);
+			//throw new ApiException(ExceptionEnum.LOGIN_001);s
+			resultMap.put("msg", ExceptionEnum.LOGIN_001.getMessage());
+			return resultMap;
 		}
 		
 		

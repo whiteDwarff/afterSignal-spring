@@ -27,6 +27,7 @@ public enum ExceptionEnum {
     
     STORE_001(HttpStatus.BAD_REQUEST, "STORE_001", "가입 신청에 실패하였습니다."),
     STORE_002(HttpStatus.BAD_REQUEST, "STORE_002", "다운로드 가능한 파일이 존재하지 않습니다."),
+    STORE_003(HttpStatus.BAD_REQUEST, "STORE_003", "등록된 플레이스 정보가 없습니다."),
 
 
     // 500

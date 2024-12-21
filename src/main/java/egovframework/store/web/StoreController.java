@@ -3,6 +3,7 @@ package egovframework.store.web;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.payload.ApiResponse;
+import egovframework.payload.ExceptionEnum;
 import egovframework.store.service.StoreService;
 
 @RestController
@@ -92,9 +94,14 @@ public class StoreController {
 	public ResponseEntity<?> getStoreInfo(@RequestBody HashMap<String, Object> param)  throws Exception { 
 		ApiResponse response = new ApiResponse(200, true, "success");
 
-		EgovMap resultMap = service.getStoreInfo(param);
 		
-		response.setResult(resultMap);
+		if(Objects.isNull(param.get("storeSeq"))) {
+			 response = new ApiResponse(404, false, ExceptionEnum.STORE_003.getMessage());
+		} else {
+			EgovMap resultMap = service.getStoreInfo(param);
+			response.setResult(resultMap);
+		}
+		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

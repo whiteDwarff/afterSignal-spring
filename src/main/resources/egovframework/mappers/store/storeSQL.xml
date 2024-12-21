@@ -77,14 +77,20 @@
   <select id="getStoreInfo" parameterType="hashMap" resultType="EgovMap">
 	 /* 스토어 정보 조회, serviceUser_SQL.getStoreInfo */
 	 SELECT 
-		  OWNER_NAME 																
-		, EMAIL 
-		, TEL
-		, BUSINESS_NUMBER 
-		, STORE_NAME 
+		  STORE_NAME 
 		, STORE_NUMBER 
-		, URL 
+		, URL
 		, INSTAGRAM 
+		, CITY 
+		, DISTRICT 
+		, POST_CODE 
+		, ADDR 
+		, DETAIL_ADDR 
+		, EXTRA_ADDR 
+		, OWNER_NAME 
+		, EMAIL 
+		, TEL 
+		, BUSINESS_NUMBER 
 		, PROC_COMM_KRNM(CITY) 	   AS "cityNm" 
 		, PROC_COMM_KRNM(DISTRICT) AS "districtNm"
 		, '(' || POST_CODE || ') ' || ADDR  || ' ' || COALESCE(DETAIL_ADDR, '') || EXTRA_ADDR AS ADDR
